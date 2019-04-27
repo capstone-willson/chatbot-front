@@ -2,6 +2,7 @@ import {html, render} from '../../node_modules/lit-html/lit-html.js'
 import './bot-chat-balloon.js'
 import './my-chat-balloon.js'
 import './book-list.js'
+import './bus-info.js' 
 
 class ChatWindowBody extends HTMLElement {
 	constructor() {

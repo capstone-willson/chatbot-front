@@ -92,7 +92,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Main; });
 /* harmony import */ var _chat_window_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-/* harmony import */ var _bot_setting_window_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(22);
+/* harmony import */ var _bot_setting_window_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -166,7 +166,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_lit_html_lit_html_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 /* harmony import */ var _components_chat_window_header_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(13);
 /* harmony import */ var _components_chat_window_body_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(15);
-/* harmony import */ var _components_chat_window_footer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(19);
+/* harmony import */ var _components_chat_window_footer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(20);
 function _templateObject2() {
   var data = _taggedTemplateLiteral(["\n<style scoped>\n\tmain {\n\t\tposition: absolute;\t\t\n\t\ttop: 0;\n\t\tleft: 0;\t\t\n\t\twidth: 100vw;\n\t\theight: 100vh;\n\t\tdisplay: grid;\n\t\tgrid-template-columns: 1fr;\n\t\tgrid-template-rows: 80px 1fr 100px;\n\t}\n\n\tchat-window-header {\n\t\tbackground-color: #A9BDCE;\n\t}\n\n\tchat-window-footer {\n\t\tbackground-color: white;\t\t\n\t}\n\n\tchat-window-body {\n\t\tbackground-color: #B2C7D9;\n\t\toverflow: scroll;\n\t}\n</style>\n"]);
 
@@ -1880,6 +1880,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bot_chat_balloon_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(16);
 /* harmony import */ var _my_chat_balloon_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(17);
 /* harmony import */ var _book_list_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(18);
+/* harmony import */ var _bus_info_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(19);
 function _templateObject2() {
   var data = _taggedTemplateLiteral(["\n<style scoped>\n\tmain {\n\t\tdisplay: grid;\n\t\tgrid-template-columns: 1fr;\n\t\tgrid-auto-rows: min-content;\n\t\twidth: 100%;\n\t\theight: 100%;\t\t\n\t}\n\n\tbot-chat-balloon, my-chat-balloon {\n\t\twidth: 100%;\n\t\tmin-height: min-content;\n\t}\n</style>\n"]);
 
@@ -1927,6 +1928,7 @@ function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[nat
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -2407,8 +2409,130 @@ customElements.define("book-list", BookList);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_lit_html_lit_html_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _modules_search_library_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(20);
-/* harmony import */ var _modules_search_food_menu_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(21);
+function _templateObject2() {
+  var data = _taggedTemplateLiteral(["\n<style scoped>\n\tmain {\n\t\tdisplay: grid;\n\t\tgrid-template-rows: repeat(5, auto);\n\t\tmax-width: 80vw;\n\t\twidth: 200px;\n\t\toverflow: hidden;\n\t}\n\n\t.bus-stop {\n\t\tdisplay: flex;\n\t\theight: 80px;\n\t}\n\n\t.bus-stop:not(:last-child) {\n\t\tborder-bottom: 1px solid hsla(0, 0%, 60%, 0.2);\t\t\n\t}\n\n\t.bus-stop-name {\n\t\talign-self: center;\n\t\tcolor: dodgerblue;\n\t\tfont-weight: bold;\n\t\tposition: absolute;\n\t\tright: 7px;\n\t\twidth: 60px;\n\t\ttext-align: left;\n\t}\n\n\t.bus-time-wrap {\n\t\tdisplay: flex;\n\t\tflex-flow: column;\n\t\ttext-align: right;\n\t\tjustify-content: center;\n\t\tposition: absolute;\n\t\theight: 80px;\n\t\tright: 52px;\n\t\twidth: 165px;\n\t\toverflow: hidden;\n\t}\n\n\t.bus-time {\n\t\tcolor: hsl(217, 20%, 56%);\n\t\ttext-align: center;\n\t\tposition: relative;\n\t\tbackground: white;\n\t\tborder: 0px solid hsl(217, 20%, 56%);\n\t\tmargin: 2px;\n\t\twidth: 105px;\n\t\tborder-radius: 5px;\n\t}\n\n\t.bus-time:after, .bus-time:before {\n\t\tleft: 100%;\n\t\ttop: 50%;\n\t\tborder: solid transparent;\t\t\n\t\tcontent: \" \";\n\t\theight: 0;\n\t\twidth: 0;\n\t\tposition: absolute;\n\t\tpointer-events: none;\n\t}\n\n\t.bus-time:after {\n\t\tborder-color: rgba(136, 183, 213, 0);\n\t\tborder-left-color: white;\n\t\tborder-width: 3px;\n\t\tmargin-top: -3px;\n\t}\n\n\t.bus-time:before {\n\t\tborder-color: rgba(194, 225, 245, 0);\n\t\tborder-left-color: hsl(217, 20%, 56%);\n\t\tborder-width: 5px;\n\t\tmargin-top: -5px;\n\t}\n\n\t.bus-arrow {\n\t\tuser-select: none;\n\t\tright: 76px;\n\t\tposition: absolute;\n\t\talign-self: center;\n\t\tborder: 1px solid #FB7100;\n\t\theight: 15px;\n\t\tborder-radius: 100%;\n\t\tcolor: #FB7100;\n\t\tbackground-color: white;\n\t\tz-index: 10;\t\t\n\t}\n\n\t.bus-arrow-pillar {\n\t\tposition: absolute;\n\t\ttop: 40px;\n\t\theight: 330px;\n\t\tbackground: #FB7100;\n\t\twidth: 3px;\n\t\tright: 82px;\n\t\tz-index: 5;\n\t}\n</style>\n"]);
+
+  _templateObject2 = function _templateObject2() {
+    return data;
+  };
+
+  return data;
+}
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["\n\t\t\t", "\n\t\t\t<main>\n\t\t\t\t<span class='bus-arrow-pillar'></span>\n\t\t\t\t<div class='bus-stop'>\n\t\t\t\t\t<span class='bus-stop-name'>", "</span>\n\t\t\t\t\t<span class='bus-time-wrap'>\n\t\t\t\t\t\t<div class='bus-time'>\uC21C\u3000\uD658 01:00</div>\n\t\t\t\t\t\t<div class='bus-time'>\uD55C\uB300\uC55E 03:02</div>\n\t\t\t\t\t</span>\n\t\t\t\t\t<span class='bus-arrow'>\u25BC</span>\n\t\t\t\t</div>\n\t\t\t\t<div class='bus-stop'>\n\t\t\t\t\t<span class='bus-stop-name'>", "</span>\n\t\t\t\t\t<span class='bus-time-wrap'>\n\t\t\t\t\t\t<div class='bus-time'>\uC21C\u3000\uD658 01:00</div>\n\t\t\t\t\t\t<div class='bus-time'>\uD55C\uB300\uC55E 03:02</div>\n\t\t\t\t\t</span>\n\t\t\t\t\t<span class='bus-arrow'>\u25BC</span>\n\t\t\t\t</div>\n\t\t\t\t<div class='bus-stop'>\n\t\t\t\t\t<span class='bus-stop-name'>", "</span>\n\t\t\t\t\t<span class='bus-time-wrap'>\n\t\t\t\t\t\t<div class='bus-time'>\uC21C\u3000\uD658 01:00</div>\n\t\t\t\t\t\t<div class='bus-time'>\uD55C\uB300\uC55E 03:02</div>\n\t\t\t\t\t</span>\n\t\t\t\t\t<span class='bus-arrow'>\u25BC</span>\n\t\t\t\t</div>\n\t\t\t\t<div class='bus-stop'>\n\t\t\t\t\t<span class='bus-stop-name'>", "</span>\n\t\t\t\t\t<span class='bus-time-wrap'>\n\t\t\t\t\t\t<div class='bus-time'>\uC21C\u3000\uD658 01:00</div>\n\t\t\t\t\t\t<div class='bus-time'>\uD55C\uB300\uC55E 03:02</div>\n\t\t\t\t\t</span>\n\t\t\t\t\t<span class='bus-arrow'>\u25BC</span>\n\t\t\t\t</div>\n\t\t\t\t<div class='bus-stop'>\n\t\t\t\t\t<span class='bus-stop-name'>", "</span>\n\t\t\t\t\t<span class='bus-time-wrap'>\n\t\t\t\t\t\t<div class='bus-time'>\uC21C\u3000\uD658 01:00</div>\n\t\t\t\t\t</span>\n\t\t\t\t\t<span class='bus-arrow'>\u25BC</span>\n\t\t\t\t</div>\n\t\t\t</main>\n\t\t"]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
+
+function isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _construct(Parent, args, Class) { if (isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+var BusInfo =
+/*#__PURE__*/
+function (_HTMLElement) {
+  _inherits(BusInfo, _HTMLElement);
+
+  function BusInfo() {
+    var _this;
+
+    _classCallCheck(this, BusInfo);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(BusInfo).call(this));
+
+    _this.attachShadow({
+      mode: "open"
+    });
+
+    Object(_node_modules_lit_html_lit_html_js__WEBPACK_IMPORTED_MODULE_0__["render"])(_this.render(), _this.shadowRoot);
+    return _this;
+  }
+
+  _createClass(BusInfo, [{
+    key: "connectedCallback",
+    value: function connectedCallback() {
+      this.syncBusArriveTime();
+    }
+  }, {
+    key: "disconnectedCallback",
+    value: function disconnectedCallback() {}
+  }, {
+    key: "syncBusArriveTime",
+    value: function syncBusArriveTime() {
+      var xhr = new XMLHttpRequest();
+      var COMPLETED = 4,
+          OK = 200;
+
+      if (!xhr) {
+        throw new Error("XHR \uD638\uCD9C \uBD88\uAC00");
+      }
+
+      xhr.open("POST", "http://34.80.42.161:8080/http://34.80.42.161:8000/v1/chat");
+      xhr.setRequestHeader("x-requested-with", "XMLHttpRequest");
+      xhr.setRequestHeader("Access-Control-Allow-Origin", "origin");
+      xhr.addEventListener("readystatechange", function () {
+        if (xhr.readyState === COMPLETED) {
+          if (xhr.status === OK) {
+            console.log(xhr.responseText);
+          }
+        }
+      });
+      xhr.send("{chat: '\uBC84\uC2A4 \uC5B8\uC81C\uC640'}");
+      return this;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return Object(_node_modules_lit_html_lit_html_js__WEBPACK_IMPORTED_MODULE_0__["html"])(_templateObject(), style, i18next.t("BUS_STOP_DORM"), i18next.t("BUS_STOP_SHUTTLE"), i18next.t("BUS_STOP_STATION"), i18next.t("BUS_STOP_ARTIN"), i18next.t("BUS_STOP_DORM"));
+    }
+  }]);
+
+  return BusInfo;
+}(_wrapNativeSuper(HTMLElement));
+
+var style = Object(_node_modules_lit_html_lit_html_js__WEBPACK_IMPORTED_MODULE_0__["html"])(_templateObject2());
+customElements.define("bus-info", BusInfo);
+
+/***/ }),
+/* 20 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_lit_html_lit_html_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+/* harmony import */ var _modules_search_library_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(21);
+/* harmony import */ var _modules_search_food_menu_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(22);
 function _templateObject2() {
   var data = _taggedTemplateLiteral(["\n<style scoped>\n\tmain {\n\t\tdisplay: grid;\n\t\tgrid-template-columns: 1fr 70px;\n\t\tgrid-template-rows: 1fr;\n\t\twidth: 100%;\n\t\theight: 100%;\n\t}\n\n\t.send_text {\n\t\tborder: 0;\n\t\tresize: none;\n\t\tmargin: 10px;\n\t\tfont-size: 14px;\n\t}\n\n\t.send_text:focus {\n\t\toutline: none;\n\t}\n\n\t.send_button {\n\t\tbackground-color: #FFEC42;\n\t\tborder: 0.5px solid #DFCE3D;\n\t\tbox-sizing: border-box;\n\t\tpadding-top: 5px;\n\t\tpadding-bottom: 5px;\n\t\twidth: 50px;\n\t\tmargin-left: auto;\n\t\tmargin-right: auto;\n\t\tborder-radius: 2px;\n\t\tfont-size: 12px;\n\t\tposition: relative;\n\t\ttop: 10%;\n\t\tleft: 50%;\n\t\ttransform: translateX(-50%);\n\t\tcolor: rgba(0, 0, 0, 0.4);\n\t}\n\n\t.send_button:hover {\n\t\tbackground-color: #F5E340;\n\t\tcolor: rgba(0, 0, 0, 0.8);\n\t}\n</style>\n"]);
 
@@ -2697,7 +2821,7 @@ var style = Object(_node_modules_lit_html_lit_html_js__WEBPACK_IMPORTED_MODULE_0
 customElements.define("chat-window-footer", ChatWindowFooter);
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2832,7 +2956,7 @@ var searchLibrary = new SearchLibrary();
 /* harmony default export */ __webpack_exports__["default"] = (searchLibrary);
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2889,13 +3013,13 @@ var searchFoodMenu = new SearchFoodMenu();
 /* harmony default export */ __webpack_exports__["default"] = (searchFoodMenu);
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_lit_html_lit_html_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _components_bot_setting_window_header_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(23);
+/* harmony import */ var _components_bot_setting_window_header_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(24);
 function _templateObject2() {
   var data = _taggedTemplateLiteral(["\n<style scoped>\n\tmain {\n\t\tposition: absolute;\t\t\n\t\ttop: 0;\n\t\tleft: 0;\t\t\n\t\twidth: 100vw;\n\t\theight: 100vh;\n\t\tdisplay: grid;\n\t\tgrid-template-columns: 1fr;\n\t\tgrid-template-rows: 80px 1fr 100px;\n\t}\n\n\tbot-setting-header {\n\t\tbackground-color: #A9BDCE;\n\t}\n\n\tbot-setting-body {\t\t\n\t\twhite-space: pre;\n\t\tpadding-left: 10px;\n\t}\n</style>\n"]);
 
@@ -2981,15 +3105,15 @@ var style = Object(_node_modules_lit_html_lit_html_js__WEBPACK_IMPORTED_MODULE_0
 customElements.define("bot-setting-window", BotSettingWindow);
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_lit_html_lit_html_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _bot_setting_menu_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(24);
+/* harmony import */ var _bot_setting_menu_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(25);
 function _templateObject2() {
-  var data = _taggedTemplateLiteral(["\n<style scoped>\n\t* {\n\t\tuser-select: none;\n\t}\n\n\tmain {\n\t\twidth: 100%;\n\t\theight: 100%;\n\t\tbox-sizing: border-box;\t\t\n\t\tdisplay: grid;\n\t\tgrid-template-columns: 80px 1fr 100px;\n\t\tgrid-template-rows: 1fr;\n\t}\n\n\t.setting-img-wrap {\n\t\tposition: relative;\n\t\tpadding: 15px;\t\n\t}\n\t\n\t.setting-img {\n\t\tposition: absolute;\n\t\twidth: 50px;\n\t\theight: 50px;\n\t\tborder-radius: 25px;\n\t\tbackground-image: url('/images/bot-setting.svg');\n\t\tbackground-repeat: no-repeat;\n    \tbackground-position: center;\n    \tbackground-size: contain;\n\t}\n\n\t.title-submenu {\n\t\tdisplay:grid;\n\t\tgrid-template-rows: 1fr 1fr;\n\t}\n\n\t.title {\n\t\tpadding-top: 20px;\n\t\tfont-size: 12px;\n\t\tfont-weight: bold;\n\t\tcolor: #4A4C4E;\n\t}\n\n\t.button-rivescript {\n\t\tborder: 0;\n\t\tbackground-color: hsl(162, 100%, 0%);\n\t\tcolor: white;\n\t\tbox-sizing: border-box;\n\t\theight: 20px;\n\t\tborder-radius: 2px;\n\t}\n\n\t.button-rivescript:not(.on):hover, .button-rivescript.on {\n\t\tbackground-color: hsl(162, 100%, 43%);\n\t}\n\n\t.button-rivescript.on:hover {\n\t\tbackground-color: hsl(162, 100%, 0%);\n\t}\n\n\t.menu svg:hover {\n\t\tcolor: black;\n\t}\n\n\t.menu {\n\t\ttext-align: right;\n    \tpadding-right: 15px;\n\t}\n\n\t.menu > svg {\n\t\tvertical-align: middle;\t\n\t\tcursor: pointer;\t\t\n\t\tposition:relative;\n\t\ttop: 50%;\n\t\ttransform: translateY(-50%);\n\t\tcolor: #65717C;\n\t}\t\n\n\t.menu-button {\n\t\tvertical-align: middle;\n\t\tposition:relative;\n\t\ttop: 50%;\n\t\ttransform: translateY(-50%);\n\t\tz-index: 20;\n\t\tpadding: 0;\n\t\tborder: 0;\n\t\tbackground-color: transparent;\n\t}\n\n\t.menu-button svg {\n\t\tcolor: #65717C;\n\t\tcursor: pointer;\n\t}\n\n\tbot-setting-menu {\n\t\tdisplay: none;\t\t\t\n\t\tposition: absolute;\n\t\ttop: 24px;\n\t\tright: -10px;\n\t}\n</style>\n"]);
+  var data = _taggedTemplateLiteral(["\n<style scoped>\n\t* {\n\t\tuser-select: none;\n\t}\n\n\tmain {\n\t\twidth: 100%;\n\t\theight: 100%;\n\t\tbox-sizing: border-box;\t\t\n\t\tdisplay: grid;\n\t\tgrid-template-columns: 80px 1fr 100px;\n\t\tgrid-template-rows: 1fr;\n\t}\n\n\t.setting-img-wrap {\n\t\tposition: relative;\n\t\tpadding: 15px;\t\n\t}\n\t\n\t.setting-img {\n\t\tposition: absolute;\n\t\tbackground-color: white;\n\t\twidth: 50px;\n\t\theight: 50px;\n\t\tborder-radius: 25px;\n\t\tbackground-image: url(/images/bot-setting.svg);\n\t\tbackground-repeat: no-repeat;\n\t\tbackground-position: center;\n\t\tbackground-size: 30px;\n\t}\n\n\t.title-submenu {\n\t\tdisplay:grid;\n\t\tgrid-template-rows: 1fr 1fr;\n\t}\n\n\t.title {\n\t\tpadding-top: 20px;\n\t\tfont-size: 12px;\n\t\tfont-weight: bold;\n\t\tcolor: #4A4C4E;\n\t}\n\n\t.button-rivescript {\n\t\tborder: 0;\n\t\tbackground-color: hsl(162, 100%, 0%);\n\t\tcolor: white;\n\t\tbox-sizing: border-box;\n\t\theight: 20px;\n\t\tborder-radius: 2px;\n\t}\n\n\t.button-rivescript:not(.on):hover, .button-rivescript.on {\n\t\tbackground-color: hsl(162, 100%, 43%);\n\t}\n\n\t.button-rivescript.on:hover {\n\t\tbackground-color: hsl(162, 100%, 0%);\n\t}\n\n\t.menu svg:hover {\n\t\tcolor: black;\n\t}\n\n\t.menu {\n\t\ttext-align: right;\n    \tpadding-right: 15px;\n\t}\n\n\t.menu > svg {\n\t\tvertical-align: middle;\t\n\t\tcursor: pointer;\t\t\n\t\tposition:relative;\n\t\ttop: 50%;\n\t\ttransform: translateY(-50%);\n\t\tcolor: #65717C;\n\t}\t\n\n\t.menu-button {\n\t\tvertical-align: middle;\n\t\tposition:relative;\n\t\ttop: 50%;\n\t\ttransform: translateY(-50%);\n\t\tz-index: 20;\n\t\tpadding: 0;\n\t\tborder: 0;\n\t\tbackground-color: transparent;\n\t}\n\n\t.menu-button svg {\n\t\tcolor: #65717C;\n\t\tcursor: pointer;\n\t}\n\n\tbot-setting-menu {\n\t\tdisplay: none;\t\t\t\n\t\tposition: absolute;\n\t\ttop: 24px;\n\t\tright: -10px;\n\t}\n</style>\n"]);
 
   _templateObject2 = function _templateObject2() {
     return data;
@@ -3140,7 +3264,7 @@ var style = Object(_node_modules_lit_html_lit_html_js__WEBPACK_IMPORTED_MODULE_0
 customElements.define("bot-setting-header", BotSettingHeader);
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

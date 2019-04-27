@@ -1,16 +1,16 @@
 {
   "name": "hanyang-chatbot",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "hanyang university chatbot",
   "main": "webpack.config.js",
   "scripts": {
-	"init": "npm install && cd server && npm install && cd .. && npm run server:bundle",
+    "init": "npm install && cd server && npm install && cd .. && npm run server:bundle",
     "test": "npm test",
     "copy:images": "cp -rf ./images ./server/public/",
     "copy:assets": "cp -rf ./assets ./server/public/",
     "copy": "npm run copy:images && npm run copy:assets",
-	"bundle": "webpack --hide-modules --colors --mode=none",
-	"dev": "webpack-dev-server --hot",
+    "bundle": "webpack --hide-modules --colors --mode=none",
+    "dev": "webpack-dev-server --hot --inline --progress --host 0.0.0.0 --disable-host-check true",
     "build": "npm run copy && npm run bundle",
     "server:bundle": "npm run build && cd server && npm start",
     "server": "cd server && npm start"
