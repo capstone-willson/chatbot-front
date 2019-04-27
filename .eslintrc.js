@@ -249,8 +249,8 @@ module.exports = {
         "quotes": [1, "backtick"],
         "semi": [1, "never"],
         // "max-params": [1, 2],
-        "max-lines-per-function": [2, 40],
-
+        // "max-lines-per-function": [2, 40], 
+ 
         // ECMAScript 6
         "arrow-body-style": 1,
         "arrow-parens": [1, `as-needed`],
