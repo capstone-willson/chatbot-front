@@ -56,7 +56,11 @@ const style = html`
 
 	chat-window-body {
 		background-color: #B2C7D9;
-		overflow: scroll;
+		overflow: scroll;		
+	}
+	
+	chat-window-body::-webkit-scrollbar {
+		width: 0;
 	}
 </style>
 `
