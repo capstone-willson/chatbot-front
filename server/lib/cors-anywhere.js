@@ -330,6 +330,16 @@ function getHandler(options, proxy) {
 		}
 
 		if (location.host === `options`) {
+			const Hanyangfood = require(`../mongodb/hanyangfood.js`)
+			const hanyangfood = new Hanyangfood({
+				test: `테스트 코드`,
+			})
+			hanyangfood.save().then(result => {
+				console.log(result)
+			}).catch(err => {
+				console.error(err)
+			})
+
 			res.writeHead(200, {'Content-Type': `text/html; charset=utf-8`})
 			fs.readFile('./views/index.html', (err, data) => {
 				if (err) {

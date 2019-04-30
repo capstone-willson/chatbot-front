@@ -7,8 +7,10 @@ const logger = require(`morgan`)
 const indexRouter = require(`./routes/index`)
 const readRivescriptRouter = require(`./routes/read-rivescript`)
 
-const app = express()
+const connect = require(`./mongodb/mongoose.js`)
 
+const app = express()
+connect()
 // view engine setup
 app.set(`views`, path.join(__dirname, `views`))
 app.engine(`html`, require(`ejs`).renderFile)
