@@ -2,37 +2,35 @@ import {html, render} from '../../node_modules/lit-html/lit-html.js'
 
 class BusInfo extends HTMLElement {
 	constructor() {
-		super()
+		super()		
+
+		this.question = this.getAttribute(`question`)		
 
 		this.attachShadow({ mode: `open` })
 		render(this.render(), this.shadowRoot)
 	}
 
-	connectedCallback() {
-		setInterval(
-		this.syncBusArriveTime()
+	connectedCallback() {	
+		this.parentNode.parentNode.parentNode.parentNode.host.style.display = `none`
+
+		this.syncBusArriveTime(this.question)
 			.getData()
-			.setDorm()
-			.setShuttle()	
-			.setStation()		
-			.setArtin()
-			.setDormLast()
-		, 1000)
 	}
 
-	syncBusArriveTime() {
+	syncBusArriveTime(question) {
 		const dorm = this.shadowRoot.querySelector(`#dorm .bus-time-wrap`)
 		const shuttle = this.shadowRoot.querySelector(`#shuttle .bus-time-wrap`)
 		const station = this.shadowRoot.querySelector(`#station .bus-time-wrap`)
 		const artin = this.shadowRoot.querySelector(`#artin .bus-time-wrap`)
 		const dormLast = this.shadowRoot.querySelector(`#dormLast .bus-time-wrap`)
-		let json
+		const busInfo = this
+		let json		
 		return {
 			getData() {
 				const xhr = new XMLHttpRequest()		
 				const COMPLETED = 4, OK = 200
 				const formData = new FormData()
-				formData.append(`chat`, `셔틀 언제와`)
+				formData.append(`chat`, question)
 
 				if(!xhr) {
 					throw new Error(`XHR 호출 불가`)
@@ -42,9 +40,23 @@ class BusInfo extends HTMLElement {
 					if(xhr.readyState === COMPLETED) {
 						if(xhr.status === OK) {
 							json = JSON.parse(xhr.responseText)
+							if (json.mode === `shuttle_bus`) {		
+								busInfo.parentNode.parentNode.parentNode.parentNode.host.style.display = `block`
+								document.querySelector(`chat-window`).scrollToLast()				
+								this.setBlank()
+									.setDorm()
+									.setShuttle()	
+									.setStation()
+									.setArtin()
+									.setDormLast()
+									.getBackData()
+							} else {
+								console.warn(`CATEGORY: NOT SHUTTLE`)
+								busInfo.parentNode.parentNode.parentNode.parentNode.host.remove()
+							}			
 						}
 					}
-				})		
+				})
 				xhr.send(formData)
 
 				return this
@@ -60,56 +72,117 @@ class BusInfo extends HTMLElement {
 			},
 			setDorm() {
 				if (json.dorm_cycle.status) {
-					dorm.innerHTML += `<div class='bus-time'>${i18next.t(`DORM_CYCLE`)} ${json.dorm_cycle.minutes}:${json.dorm_cycle.seconds}</div>`
+					dorm.innerHTML += `<div class='bus-time'>${i18next.t(`DORM_CYCLE`)} ${this.addZeros(json.dorm_cycle.minutes, 2)}:${this.addZeros(json.dorm_cycle.seconds, 2)}</div>`
 				}
 				if (json.dorm_station.status) {
-					dorm.innerHTML += `<div class='bus-time'>${i18next.t(`DORM_STATION`)} ${json.dorm_station.minutes}:${json.dorm_station.seconds}</div>`
+					dorm.innerHTML += `<div class='bus-time'>${i18next.t(`DORM_STATION`)} ${this.addZeros(json.dorm_station.minutes, 2)}:${this.addZeros(json.dorm_station.seconds, 2)}</div>`
 				}
 				if (json.dorm_artin.status) {
-					dorm.innerHTML += `<div class='bus-time'>${i18next.t(`DORM_ARTIN`)} ${json.dorm_artin.minutes}:${json.dorm_artin.seconds}</div>`
+					dorm.innerHTML += `<div class='bus-time'>${i18next.t(`DORM_ARTIN`)} ${this.addZeros(json.dorm_artin.minutes, 2)}:${this.addZeros(json.dorm_artin.seconds, 2)}</div>`
 				}	
 				return this
 			},
 			setShuttle() {						
 				if (json.shuttle_cycle.status) {
-					shuttle.innerHTML += `<div class='bus-time'>${i18next.t(`SHUTTLE_CYCLE`)} ${json.shuttle_cycle.minutes}:${json.shuttle_cycle.seconds}</div>`
+					shuttle.innerHTML += `<div class='bus-time'>${i18next.t(`SHUTTLE_CYCLE`)} ${this.addZeros(json.shuttle_cycle.minutes, 2)}:${this.addZeros(json.shuttle_cycle.seconds, 2)}</div>`
 				}				
 				if (json.shuttle_station.status) {
-					shuttle.innerHTML += `<div class='bus-time'>${i18next.t(`SHUTTLE_STATION`)} ${json.shuttle_station.minutes}:${json.shuttle_station.seconds}</div>`
+					shuttle.innerHTML += `<div class='bus-time'>${i18next.t(`SHUTTLE_STATION`)} ${this.addZeros(json.shuttle_station.minutes, 2)}:${this.addZeros(json.shuttle_station.seconds,2)}</div>`
 				}
 				if (json.shuttle_artin.status) {
-					shuttle.innerHTML += `<div class='bus-time'>${i18next.t(`SHUTTLE_ARTIN`)} ${json.shuttle_artin.minutes}:${json.shuttle_artin.seconds}</div>`
+					shuttle.innerHTML += `<div class='bus-time'>${i18next.t(`SHUTTLE_ARTIN`)} ${this.addZeros(json.shuttle_artin.minutes,2)}:${this.addZeros(json.shuttle_artin.seconds, 2)}</div>`
 				}
 				return this
 			},
 			setStation() {
 				if (json.station.status) {
-					station.innerHTML += `<div class='bus-time'>${i18next.t(`STATION_CYCLE`)} ${json.station.minutes}:${json.station.seconds}</div>`
+					station.innerHTML += `<div class='bus-time'>${i18next.t(`STATION_CYCLE`)} ${this.addZeros(json.station.minutes, 2)}:${this.addZeros(json.station.seconds, 2)}</div>`
 				}	
 				if (json.station_artin.status) {
-					station.innerHTML += `<div class='bus-time'>${i18next.t(`STATION_ARTIN`)} ${json.station_artin.minutes}:${json.station_artin.seconds}</div>`
+					station.innerHTML += `<div class='bus-time'>${i18next.t(`STATION_ARTIN`)} ${this.addZeros(json.station_artin.minutes, 2)}:${this.addZeros(json.station_artin.seconds, 2)}</div>`
 				}			
 				return this	
 			},
 			setArtin() {
 				if (json.artin.status) {
-					artin.innerHTML += `<div class='bus-time'>${i18next.t(`ARTIN_CYCLE`)} ${json.artin.minutes}:${json.artin.seconds}</div>`
+					artin.innerHTML += `<div class='bus-time'>${i18next.t(`ARTIN_CYCLE`)} ${this.addZeros(json.artin.minutes, 2)}:${this.addZeros(json.artin.seconds, 2)}</div>`
 				}
 				return this
 			},
 			setDormLast() {
 				if (json.shuttle_dorm.status) {
-					dormLast.innerHTML += `<div class='bus-time'>${i18next.t(`SHUTTLE_DROM`)} ${json.shuttle_dorm.minutes}:${json.shuttle_dorm.seconds}</div>`
+					dormLast.innerHTML += `<div class='bus-time'>${i18next.t(`SHUTTLE_DROM`)} ${this.addZeros(json.shuttle_dorm.minutes, 2)}:${this.addZeros(json.shuttle_dorm.seconds, 2)}</div>`
 				}
 				return this
 			},
+			getBackData() {
+				const rotateData = [`dorm_cycle`, `dorm_station`, `dorm_artin`, `shuttle_cycle`, `shuttle_station`, `shuttle_artin`, `station`, `station_artin`, `artin`, `shuttle_dorm`]
+				let canChange = false
+
+				for (const Line of rotateData) {
+					if (isTimeZero(Line)) {
+						canChange = true
+					}
+				}
+
+				if (canChange) {
+					this.getData()
+				} else {
+					this.minusTime().then(() => {
+						this.setBlank()
+							.setDorm()
+							.setShuttle()	
+							.setStation()
+							.setArtin()
+							.setDormLast()
+							.getBackData()
+					})					
+				}
+
+				function isTimeZero(Line) {
+					return json[Line][`status`] && json[Line][`minutes`] <= 0					
+				}
+
+				return this
+			},
+			async minusTime() {
+				const rotateData = [`dorm_cycle`, `dorm_station`, `dorm_artin`, `shuttle_cycle`, `shuttle_station`, `shuttle_artin`, `station`, `station_artin`, `artin`, `shuttle_dorm`]
+
+				for (const Line of rotateData) {
+					if (json[Line][`status`]) {
+						json[Line][`seconds`]--
+
+						if (json[Line][`seconds`] <= 0) {
+							json[Line][`seconds`] = 59
+							json[Line][`minutes`]--
+						}
+					}
+				}
+				await this.sleep()
+				return this
+			},
+			sleep() {
+				return new Promise(resolve => setInterval(resolve, 1000))
+			},
+			addZeros(num, digit) {
+				const _num = num.toString()		
+				let zero = ``		
+				
+				if (_num.length < digit) {
+					for (let i = 0; i < digit - _num.length; i++) {
+						zero += `0`
+					}
+				}
+				return zero + _num
+			},
 		}
-	}
+	}		
 
 	render() {
 		return html`
 			${style}
 			<main>
+				<div class='bus-left-time'>${i18next.t(`BUS_LEFT_TIME`)}</div>
 				<span class='bus-arrow-pillar'></span>
 				<div class='bus-stop' id='dorm'>
 					<span class='bus-stop-name'>${i18next.t(`BUS_STOP_DORM`)}</span>
@@ -158,6 +231,11 @@ const style = html`
 
 	.bus-stop:not(:last-child) {
 		border-bottom: 1px solid hsla(0, 0%, 60%, 0.2);		
+	}
+
+	.bus-left-time {
+		font-weight: bold;
+		color: dodgerblue;
 	}
 
 	.bus-stop-name {
@@ -234,7 +312,7 @@ const style = html`
 	.bus-arrow-pillar {
 		position: absolute;
 		top: 40px;
-		height: 330px;
+		height: 370px;
 		background: #FB7100;
 		width: 3px;
 		right: 82px;

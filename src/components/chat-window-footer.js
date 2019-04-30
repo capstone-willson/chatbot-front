@@ -41,10 +41,11 @@ class ChatWindowFooter extends HTMLElement {
 		const sendText = this.shadowRoot.querySelector(`.send_text`)
 
 		chatBody.send(sendText.value)
-		this.replyAboutCategory(sendText.value)
-		searchLibrary.replyAboutLibrary(sendText.value)
-		searchFoodMenu.openHanyangSite()
+		// this.replyAboutCategory(sendText.value)
+		// searchLibrary.replyAboutLibrary(sendText.value)
+		// searchFoodMenu.openHanyangSite()
 		// this.replyByPingpongAPI(sendText.value)
+		document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`).reply(`<bus-info question='${sendText.value}'></bus-info>`)
 		sendText.value = ``		
 	}
 
@@ -240,7 +241,7 @@ const style = html`
 	.send_button:hover {
 		background-color: #F5E340;
 		color: rgba(0, 0, 0, 0.8);
-	}
+	}	
 </style>
 `
 

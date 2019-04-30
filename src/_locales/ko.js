@@ -35,4 +35,11 @@ export default {
 	ARTIN_CYCLE: `순환버스`,
 
 	SHUTTLE_DROM: `기숙사행`,
+
+	PROCESS_DATA_COLLECTION: `데이터 수집`,
+	PROCESS_DATA_ANALYSIS: `데이터 분석`,
+	PROCESS_DATA_DETAIL: `상세 분석`,
+	PROCESS_DATA_VISUALIZATION: `분석 시각화`,
+
+	BUS_LEFT_TIME: `도착까지 남은시간`,
 }
