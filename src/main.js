@@ -3,8 +3,28 @@ import './bot-setting-window.js'
 
 export default class Main {
 	static init() {
-		this.loadingDOM()
-		this.renderChatWindow()
+		this.loadingDOM()		
+		this.router()
+			.isPathRoot()
+			.isPathOptions()
+	}
+
+	static router() {
+		const path = location.pathname
+		return {
+			isPathRoot() {
+				if (path === `/`) {					
+					Main.renderChatWindow()
+				}
+				return this
+			},
+			isPathOptions() {
+				if (path === `/options`) {
+					Main.renderBotSettingWindow()
+				}
+				return this
+			},
+		}
 	}
 
 	static loadingDOM() {

@@ -329,11 +329,25 @@ function getHandler(options, proxy) {
 			return
 		}
 
-		if (location.host === `hanyangfood`) {
-			const puppeteer = require('puppeteer')
-			res.writeHead(200, {'Content-Type': `text/plain; charset=UTF-8`})			
+		if (location.host === `options`) {
+			res.writeHead(200, {'Content-Type': `text/html; charset=utf-8`})
+			fs.readFile('./views/index.html', (err, data) => {
+				if (err) {
+				  return console.error(err);
+				}
+				res.end(data, 'utf-8');
+			  });
+			return
+		}
 
-			crawl(13)
+		if (location.host === `hanyangfood`) {
+			const puppeteer = require('puppeteer')			
+			res.writeHead(200, {
+				'Content-Type': `text/plain; charset=UTF-8`,
+				'access-control-allow-origin': `*`})
+			
+			// 11: 교직원, 12: 학식, 13: 기식, 14: 푸드코트, 15: 창보
+			crawl(new URL(location.href).searchParams.get(`place`))
 			async function crawl(place) {
 				const browser = await puppeteer.launch()
 				const page = await browser.newPage()

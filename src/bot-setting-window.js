@@ -1,5 +1,6 @@
 import {html, render} from '../node_modules/lit-html/lit-html.js'
 import './components/bot-setting-window-header.js'
+import './components/bot-setting-window-body.js'
 
 class BotSettingWindow extends HTMLElement {
 	constructor() {
@@ -31,7 +32,7 @@ const style = html`
 		height: 100vh;
 		display: grid;
 		grid-template-columns: 1fr;
-		grid-template-rows: 80px 1fr 100px;
+		grid-template-rows: 80px 1fr;		
 	}
 
 	bot-setting-header {
@@ -41,6 +42,8 @@ const style = html`
 	bot-setting-body {		
 		white-space: pre;
 		padding-left: 10px;
+		position: relative;
+		overflow: scroll;
 	}
 </style>
 `
