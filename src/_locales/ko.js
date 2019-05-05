@@ -1,12 +1,12 @@
 export default {
 	APP_NAME: `한양 챗봇`,
 
-	BOT_NAME: `하이리온 봇`,
+	BOT_NAME: `하냥이`,
 	MENU_ALARM_TITLE: `알람`,
 	MENU_TITLE: `메뉴`,
 
-	BOT_SETTING_TITLE: `하이리온 봇 설정`,	
-	MENU_BOT_SETTING: `봇 커스텀 설정`,	
+	BOT_SETTING_TITLE: `하냥이 봇 설정`,	
+	MENU_BOT_SETTING: `봇 커스텀 설정`,
 	MENU_CHAT_WINDOW: `채팅창으로 이동`,
 	CONVERT_RIVESCRIPT: `RiveScript로 전환`,
 
@@ -42,4 +42,9 @@ export default {
 	PROCESS_DATA_VISUALIZATION: `분석 시각화`,
 
 	BUS_LEFT_TIME: `도착까지 남은시간`,
+
+	PROCESS_DATA_FOOD: `식단`,
+	PROCESS_DATA_BUS: `셔틀버스`,
+	PROCESS_DATA_QUERY: `사용자 질문`,
+	PROCESS_DATA_QUESTION: `사전 질문`,
 }

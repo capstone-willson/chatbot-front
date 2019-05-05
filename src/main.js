@@ -44,12 +44,14 @@ export default class Main {
 		this.emptyDOM()
 		const chatWindow = document.createElement(`chat-window`)
 		document.querySelector(`.app-root`).appendChild(chatWindow)
+		history.pushState({}, `Main Page`, `/`)
 	}
 
 	static renderBotSettingWindow() {
 		this.emptyDOM()
 		const botSettingWIndow = document.createElement(`bot-setting-window`)
 		document.querySelector(`.app-root`).appendChild(botSettingWIndow)
+		history.pushState({}, `Option Page`, `/options`)
 	}
 
 	static emptyDOM() {
