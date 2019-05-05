@@ -1,6 +1,6 @@
 import {html, render} from '../../node_modules/lit-html/lit-html.js'
-import searchLibrary from '../modules/search-library.js'
-import searchFoodMenu from '../modules/search-food-menu.js'
+// import searchLibrary from '../modules/search-library.js'
+// import searchFoodMenu from '../modules/search-food-menu.js'
 
 class ChatWindowFooter extends HTMLElement {	
 	constructor() {
@@ -41,7 +41,6 @@ class ChatWindowFooter extends HTMLElement {
 		const sendText = this.shadowRoot.querySelector(`.send_text`)
 
 		chatBody.send(sendText.value)
-		// this.replyAboutCategory(sendText.value)
 		// searchLibrary.replyAboutLibrary(sendText.value)
 		// searchFoodMenu.openHanyangSite()
 		// this.replyByPingpongAPI(sendText.value)
@@ -139,27 +138,6 @@ class ChatWindowFooter extends HTMLElement {
 			isCheckout='${bookInfo.isCheckout}' ></book-list>`)
 	}
 
-	replyAboutCategory(text) {
-		const chatBody = document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`)
-		const xhr = new XMLHttpRequest()		
-		const COMPLETED = 4, OK = 200
-
-		if(!xhr) {
-			throw new Error(`XHR 호출 불가`)
-		}		
-		xhr.open(`GET`, `http://localhost:8080/http://34.80.42.161:8000/api/?chat=${encodeURIComponent(text)}`)	
-		xhr.setRequestHeader(`x-requested-with`, `XMLHttpRequest`)
-		xhr.addEventListener(`readystatechange`, () => {
-			if(xhr.readyState === COMPLETED) {
-				if(xhr.status === OK) {
-					chatBody.reply(`카테고리: ${xhr.responseText}`)
-				}
-			}
-		})		
-		xhr.send()
-		return this
-	}
-
 	replyByPingpongAPI(text) {
 		const xhr = new XMLHttpRequest()
 		const COMPLETED = 4, OK = 200, FIRST_TEXT = 0
@@ -221,8 +199,8 @@ const style = html`
 	}
 
 	.send_button {
-		background-color: #FFEC42;
-		border: 0.5px solid #DFCE3D;
+		background-color: #6B7EFC;
+		border: 0.5px solid #6B7EFC;
 		box-sizing: border-box;
 		padding-top: 5px;
 		padding-bottom: 5px;
@@ -235,12 +213,13 @@ const style = html`
 		top: 10%;
 		left: 50%;
 		transform: translateX(-50%);
-		color: rgba(0, 0, 0, 0.4);
+		color: white;
+		font-weight: bold;
+		transition: all 0.1s ease-in;
 	}
 
 	.send_button:hover {
-		background-color: #F5E340;
-		color: rgba(0, 0, 0, 0.8);
+		color: black;
 	}	
 </style>
 `

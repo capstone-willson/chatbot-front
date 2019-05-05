@@ -135,7 +135,7 @@ const style = html`
 		padding-top: 20px;
 		font-size: 12px;
 		font-weight: bold;
-		color: #4A4C4E;
+		color: white;
 	}
 
 	.button-rivescript {
@@ -185,7 +185,7 @@ const style = html`
 	}
 
 	.menu-button svg {
-		color: #65717C;
+		color: white;
 		cursor: pointer;
 	}
 

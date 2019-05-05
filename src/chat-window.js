@@ -47,7 +47,7 @@ const style = html`
 	}
 
 	chat-window-header {
-		background-color: #A9BDCE;
+		background-color: #6B7EFC;
 	}
 
 	chat-window-footer {
@@ -55,7 +55,7 @@ const style = html`
 	}
 
 	chat-window-body {
-		background-color: #B2C7D9;
+		background-color: #EDEEFE;
 		overflow: scroll;		
 	}
 	

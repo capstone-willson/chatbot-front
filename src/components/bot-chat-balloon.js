@@ -135,7 +135,7 @@ const style = html`
 		position: absolute;
 		pointer-events: none;
 		border-radius: 25px;
-		background: #B2C7D9;
+		background: #EDEEFE;
 		z-index: -1;
 	}	
 </style>

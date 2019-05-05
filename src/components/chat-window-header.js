@@ -24,12 +24,8 @@ class ChatWindowHeader extends HTMLElement {
 		this.shadowRoot.querySelector(`.menu-alarm`).removeEventListener(`click`, this.eventClickAlarm, true)
 	}
 
-	onClickSubmenuPicture() {
-		alert(i18next.t(`NO_IMPLEMENT`))
-	}
-
 	onClickSubmenuSearch() {
-		alert(i18next.t(`NO_IMPLEMENT`))
+		console.info(i18next.t(`NO_IMPLEMENT`))
 	}
 
 	onClickMenu() {
@@ -127,9 +123,9 @@ const style = html`
 
 	.name {
 		padding-top: 20px;
-		font-size: 12px;
+		font-size: 14px;
 		font-weight: bold;
-		color: #4A4C4E;
+		color: white;
 	}
 
 	.submenu > button {
@@ -146,10 +142,15 @@ const style = html`
 	}
 
 	.submenu-search svg {
-		color: #65717C;
+		color: white;
+		transition: all 0.2s ease-in;
 	}
 
-	.submenu svg:hover, .menu svg:hover {
+	.submenu svg:hover {
+		color: black;
+	}
+
+	.menu svg:hover {
 		color: black;
 	}
 
@@ -170,12 +171,13 @@ const style = html`
 	}
 
 	.menu-alarm svg {
-		color: #65717C;
+		color: white;
+		transition: all 0.2s ease-in;
 	}
 
 	.menu-alarm, .menu-button {
 		vertical-align: middle;				
-		position:relative;
+		position: relative;
 		top: 50%;
 		transform: translateY(-50%);
 		z-index: 20;
@@ -185,8 +187,9 @@ const style = html`
 	}
 
 	.menu-button > svg {
-		color: #65717C;
+		color: white;
 		cursor: pointer;
+		transition: all 0.2s ease-in;
 	}
 
 	chat-window-menu {

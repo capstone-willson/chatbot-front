@@ -1,7 +1,7 @@
 export default {
 	APP_NAME: `한양 챗봇`,
 
-	BOT_NAME: `하냥이`,
+	BOT_NAME: `하냥이 봇`,
 	MENU_ALARM_TITLE: `알람`,
 	MENU_TITLE: `메뉴`,
 

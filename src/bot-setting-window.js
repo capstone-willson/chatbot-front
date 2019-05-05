@@ -36,7 +36,7 @@ const style = html`
 	}
 
 	bot-setting-header {
-		background-color: #A9BDCE;
+		background-color: #6B7EFC;
 	}
 
 	bot-setting-body {		
