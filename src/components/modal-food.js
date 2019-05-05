@@ -62,7 +62,7 @@ class ModalFood extends HTMLElement {
 		return html`
 			${style}
 			<div id='modalFood'>
-				<iframe src='http://localhost:8088/api-docs/'></iframe>
+				<iframe src='http://34.80.42.161:8088/api-docs/'></iframe>
 			</div>
 		`
 	}	
