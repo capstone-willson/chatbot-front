@@ -5,16 +5,27 @@ const cookieParser = require(`cookie-parser`)
 const logger = require(`morgan`)
 
 const indexRouter = require(`./routes/index`)
-const readRivescriptRouter = require(`./routes/read-rivescript`)
 
+
+
+// 몽구스, 노드-스케줄러 실행
 const connect = require(`./mongodb/mongoose.js`)
+const doScheduler = require(`./lib/save-school-food-list.js`)
 
 const app = express()
+
 connect()
+doScheduler()
+
+const swaggerJSDoc = require(`swagger-jsdoc`)
+const swaggerOption = require(`./swagger-jsdoc.js`)
+const swaggerSpec = swaggerJSDoc(swaggerOption)
+const swaggerUi = require(`swagger-ui-express`)
+
 // view engine setup
 app.set(`views`, path.join(__dirname, `views`))
-app.engine(`html`, require(`ejs`).renderFile)
-// app.set(`view engine`, `pug`)
+// app.engine(`html`, require(`ejs`).renderFile)
+app.set(`view engine`, `pug`)
 
 app.use(logger(`dev`))
 app.use(express.json())
@@ -23,7 +34,7 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, `public`)))
 
 app.use(`/`, indexRouter)
-app.use(`/read-rivescript`, readRivescriptRouter)
+app.use(`/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

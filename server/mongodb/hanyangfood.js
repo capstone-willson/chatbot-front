@@ -1,13 +1,13 @@
 const mongoose = require(`mongoose`)
-// const puppeteer = require(`puppeteer`)
 
 const { Schema } = mongoose
 const hanyangfood = new Schema({
-	test: {
-		type: String,
-		required: true,
-		unique: true,
+	placeId: {
+		type: Number,
+	},
+	foodList: {
+		type: Object,
 	},
 })
 
-module.exports = mongoose.model(`Hanyangfood`, hanyangfood)
+module.exports = mongoose.model(`Hanyangfoods`, hanyangfood)

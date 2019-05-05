@@ -6,8 +6,10 @@ module.exports = () => {
 			mongoose.set(`debug`, true)
 		}
 
-		mongoose.connect(`mongodb://taeuk:dnrxo123@localhost:27017/chatbot`, {
-			dbName: `hanyangfood`,
+		mongoose.connect(`mongodb://taeuk:dnrxo123@34.80.42.161:27017/admin`, {
+			user: `taeuk`,
+			pass: `dnrxo123`,
+			dbName: `chatbot`,
 		}, error => {
 			if (error) {
 				console.error(`몽고DB 연결 실패`, error)
@@ -28,5 +30,5 @@ module.exports = () => {
 		connect()
 	})
 
-	require(`./hanyangfood`)
+	require(`./hanyangfood.js`)
 }
