@@ -15,7 +15,7 @@ class ChatWindowBody extends HTMLElement {
 	connectedCallback() {
 		this.chatWindow = document.querySelector(`chat-window`)
 
-		this.bot = new RiveScript()
+		// this.bot = new RiveScript()
 
 		// 라이브 스크립트 테스트 코드
 		// this.bot.loadFile(`/assets/hy-lion.rive`).then(this.loading_done.bind(this)).catch(this.loading_error)
