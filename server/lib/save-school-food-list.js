@@ -2,24 +2,15 @@ const schedule = require(`node-schedule`)
 const puppeteer = require(`puppeteer`)
 const Hanyangfood = require(`../mongodb/hanyangfood.js`)
 
-module.exports = () => {
-	const midnight = new Date(new Date(new Date(new Date().setHours(0)).setMinutes(0)).setSeconds(0))
-
-	for(let i = 11; i < 16; i++) {
-		crawl(i)
-	}
-
+module.exports = () => {	
 	// 11: 교직원, 12: 학식, 13: 기식, 14: 푸드코트, 15: 창보
-	schedule.scheduleJob(midnight, () => {
+	// for(let i = 11; i < 16; i++) {
+	// 	crawl(i)
+	// }	
+	schedule.scheduleJob(`00 11 01 * * *`, () => {
 		for(let i = 11; i < 16; i++) {
 			crawl(i) 
 		}
-
-		schedule.scheduleJob(new Date(new Date(new Date(new Date().setHours(0)).setMinutes(0)).setSeconds(0)), () => {
-			for(let i = 11; i < 16; i++) {
-				crawl(i) 
-			}
-		})
 	})
 }
 
