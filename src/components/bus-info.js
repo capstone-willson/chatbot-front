@@ -40,6 +40,7 @@ class BusInfo extends HTMLElement {
 					if(xhr.readyState === COMPLETED) {
 						if(xhr.status === OK) {
 							json = JSON.parse(xhr.responseText)
+							json = json.answer
 							if (json.mode === `shuttle_bus`) {		
 								busInfo.parentNode.parentNode.parentNode.parentNode.host.style.display = `block`
 								document.querySelector(`chat-window`).scrollToLast()				
