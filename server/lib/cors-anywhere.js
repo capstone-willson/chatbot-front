@@ -75,6 +75,7 @@ function isValidHostName(hostname) {
  * @param request {ServerRequest}
  */
 function withCORS(headers, request) {
+	headers[`X-Frame-Options`] = `ALLOW-FROM localhost:8088`
 	headers[`access-control-allow-origin`] = `*`
 	const corsMaxAge = request.corsAnywhereRequestState.corsMaxAge
 	if (corsMaxAge) {

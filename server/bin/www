@@ -14,7 +14,7 @@ const cors_proxy = require(`../lib/cors-anywhere`)
  */
 
 const host = process.env.HOST || `0.0.0.0`
-const port = process.env.PORT || 8089
+const port = process.env.PORT || 8088
 // const port = normalizePort(process.env.PORT || `3000`)
 app.set(`port`, port)
 

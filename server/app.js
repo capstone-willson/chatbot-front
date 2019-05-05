@@ -3,6 +3,8 @@ const express = require(`express`)
 const path = require(`path`)
 const cookieParser = require(`cookie-parser`)
 const logger = require(`morgan`)
+const cors = require(`cors`)
+const helmet = require(`helmet`)
 
 const indexRouter = require(`./routes/index`)
 
@@ -13,6 +15,10 @@ const connect = require(`./mongodb/mongoose.js`)
 const doScheduler = require(`./lib/save-school-food-list.js`)
 
 const app = express()
+app.use(cors())
+app.use(helmet({
+	frameguard: false
+}))
 
 connect()
 doScheduler()
@@ -34,6 +40,7 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, `public`)))
 
 app.use(`/`, indexRouter)
+app.use(`/options`, indexRouter)
 app.use(`/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 // catch 404 and forward to error handler

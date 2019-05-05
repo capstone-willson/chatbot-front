@@ -10,6 +10,7 @@ module.exports = () => {
 			user: `taeuk`,
 			pass: `dnrxo123`,
 			dbName: `chatbot`,
+			useNewUrlParser: true,
 		}, error => {
 			if (error) {
 				console.error(`몽고DB 연결 실패`, error)
