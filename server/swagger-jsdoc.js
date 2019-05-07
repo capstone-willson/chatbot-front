@@ -5,11 +5,11 @@ module.exports = {
 		// 정보
 		info: {
 			title: `Node.js Server API`,
-			version: `0.0.1`,
+			version: `0.0.2`,
 			description: `Node.js 서버 API 설명서`,
 		},
 		// 주소
-		host: `localhost:8080`,
+		host: `34.80.42.161:8080`,
 		// 기본 root path
 		basePath: `/`,
 		contact: {
