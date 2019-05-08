@@ -18,9 +18,29 @@ class ModalShuttle extends HTMLElement {
 			const iframe = this.shadowRoot.querySelector(`iframe`).contentDocument
 			iframe.head.insertAdjacentHTML(`beforeend`, `
 				<style>
-					
+					*::-webkit-scrollbar {
+						width: 0;
+					}
+
+					.curl {
+						min-width: 100% !important;
+					}
+
+					#operations-tag-v1, #operations-v1-post_categorize_chat, #operations-v1-질문_추가, .response-col_status, #operations-v1-셔틀_버스_정보_조회 {
+						display: none;
+					}
 				</style>
 			`)
+
+			await this.sleep(2000)
+			console.log('iframe.querySelector(`#operations-tag-v1 button`)', iframe.querySelector(`#operations-tag-v1`))
+			iframe.querySelector(`#operations-tag-v1`).click()
+			await this.sleep(500)
+			iframe.querySelector(`#operations-v1-get_shuttle > div`).click()
+			await this.sleep(500)
+			iframe.querySelector(`#operations-v1-get_shuttle .try-out__btn`).click()
+			await this.sleep(500)
+			iframe.querySelector(`#operations-v1-get_shuttle .execute`).click()		
 		})
 
 	}
