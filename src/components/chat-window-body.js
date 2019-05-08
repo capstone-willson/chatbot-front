@@ -10,24 +10,24 @@ class ChatWindowBody extends HTMLElement {
 
 		this.attachShadow({ mode: `open` })
 		render(this.render(), this.shadowRoot)		
+
+		this.bot = new RiveScript({utf8: true})
+		this.bot.loadFile(`/assets/hy-lion.rive`).then(this.loading_done.bind(this)).catch(this.loading_error)
 	}
 
 	connectedCallback() {
 		this.chatWindow = document.querySelector(`chat-window`)
+	}
 
-		// this.bot = new RiveScript()
-
-		// 라이브 스크립트 테스트 코드
-		// this.bot.loadFile(`/assets/hy-lion.rive`).then(this.loading_done.bind(this)).catch(this.loading_error)
+	loading_done() {
+		this.bot.sortReplies()
 	}
 	
-	loading_done() {
+	botSay(sendText) {
 		const username = `hy-lion`
-		const sendText = `hello`
 
 		this.bot.sortReplies()		
 
-		this.send(sendText)
 		this.bot.reply(username, sendText).then(reply => {
 			this.reply(reply)
 		})
@@ -48,11 +48,11 @@ class ChatWindowBody extends HTMLElement {
 			const botChatBalloon = document.createElement(`bot-chat-balloon`)
 			main.appendChild(botChatBalloon)
 			botChatBalloon.chat(text)
-			this.chatWindow.scrollToLast()
+			document.querySelector(`chat-window`).scrollToLast()
 			return
 		}
 		lastChat.chat(text)
-		this.chatWindow.scrollToLast()
+		document.querySelector(`chat-window`).scrollToLast()
 	}
 
 	send(text) {
@@ -65,11 +65,11 @@ class ChatWindowBody extends HTMLElement {
 			const myChatBalloon = document.createElement(`my-chat-balloon`)
 			main.appendChild(myChatBalloon)
 			myChatBalloon.chat(text)
-			this.chatWindow.scrollToLast()
+			document.querySelector(`chat-window`).scrollToLast()
 			return
 		}
 		lastChat.chat(text)
-		this.chatWindow.scrollToLast()
+		document.querySelector(`chat-window`).scrollToLast()
 	}
 
 	waitSend(callback) {
@@ -118,3 +118,5 @@ const style = html`
 `
 
 customElements.define(`chat-window-body`, ChatWindowBody)
+const chatWindowBody = new ChatWindowBody()
+export default chatWindowBody

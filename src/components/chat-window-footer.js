@@ -1,6 +1,7 @@
 import {html, render} from '../../node_modules/lit-html/lit-html.js'
 // import searchLibrary from '../modules/search-library.js'
 // import searchFoodMenu from '../modules/search-food-menu.js'
+import chatWindowBody from './chat-window-body.js'
 
 class ChatWindowFooter extends HTMLElement {	
 	constructor() {
@@ -40,11 +41,14 @@ class ChatWindowFooter extends HTMLElement {
 		const chatBody = document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`)
 		const sendText = this.shadowRoot.querySelector(`.send_text`)
 
-		chatBody.send(sendText.value)
+		chatBody.send(sendText.value)		
+		
+		// chatBody.botSay(sendText.value)
+
 		// searchLibrary.replyAboutLibrary(sendText.value)
 		// searchFoodMenu.openHanyangSite()
 		// this.replyByPingpongAPI(sendText.value)
-		document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`).reply(`<bus-info question='${sendText.value}'></bus-info>`)
+		// document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`).reply(`<bus-info question='${sendText.value}'></bus-info>`)
 		sendText.value = ``		
 	}
 
