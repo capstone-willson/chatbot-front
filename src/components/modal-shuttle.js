@@ -36,11 +36,11 @@ class ModalShuttle extends HTMLElement {
 			console.log('iframe.querySelector(`#operations-tag-v1 button`)', iframe.querySelector(`#operations-tag-v1`))
 			iframe.querySelector(`#operations-tag-v1`).click()
 			await this.sleep(500)
-			iframe.querySelector(`#operations-v1-get_shuttle > div`).click()
+			iframe.querySelector(`[id*=현재시간] > div`).click()
 			await this.sleep(500)
-			iframe.querySelector(`#operations-v1-get_shuttle .try-out__btn`).click()
+			iframe.querySelector(`[id*=현재시간] .try-out__btn`).click()
 			await this.sleep(500)
-			iframe.querySelector(`#operations-v1-get_shuttle .execute`).click()		
+			iframe.querySelector(`[id*=현재시간] .execute`).click()		
 		})
 
 	}
