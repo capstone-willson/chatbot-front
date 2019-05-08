@@ -1,5 +1,6 @@
 import {html, render} from '../../node_modules/lit-html/lit-html.js'
 import './modal-food.js'
+import './modal-shuttle.js'
 
 class BotSettingBody extends HTMLElement {
 	constructor() {
@@ -8,19 +9,22 @@ class BotSettingBody extends HTMLElement {
 		render(this.render(), this.shadowRoot)		
 		
 		this.eventClickProcessBox = this.onClickProcessBox.bind(this)
-		this.eventClickSubBox = this.onClickSubBox.bind(this)
+		this.eventClickSubBoxFood = this.onClickSubBoxFood.bind(this)
+		this.eventClickSubBoxShuttle = this.onClickSubBoxShuttle.bind(this)
 		this.eventAnimatedEnd = this.onAnimatedEnd.bind(this)
 	}
 
 	connectedCallback() {				
 		this.shadowRoot.querySelector(`.process-data-collection`).addEventListener(`click`, this.eventClickProcessBox, true)
-		this.shadowRoot.querySelector(`.process-data.food`).addEventListener(`click`, this.eventClickSubBox, true)
+		this.shadowRoot.querySelector(`.process-data.food`).addEventListener(`click`, this.eventClickSubBoxFood, true)
+		this.shadowRoot.querySelector(`.process-data.bus`).addEventListener(`click`, this.eventClickSubBoxShuttle, true)
 		this.shadowRoot.querySelector(`main`).addEventListener(`transitionend`, this.eventAnimatedEnd, true)
 	}
 
 	disconnectedCallback() {
 		this.shadowRoot.querySelector(`.process-data-collection`).removeEventListener(`click`, this.eventClickProcessBox, true)
-		this.shadowRoot.querySelector(`.process-data.food`).removeEventListener(`click`, this.eventClickSubBox, true)	
+		this.shadowRoot.querySelector(`.process-data.food`).removeEventListener(`click`, this.eventClickSubBoxFood, true)
+		this.shadowRoot.querySelector(`.process-data.bus`).removeEventListener(`click`, this.eventClickSubBoxShuttle, true)
 		this.shadowRoot.querySelector(`main`).removeEventListener(`transitionend`, this.eventAnimatedEnd, true)
 	}	
 
@@ -36,12 +40,20 @@ class BotSettingBody extends HTMLElement {
 		}
 	}
 
-	onClickSubBox(event) {
+	onClickSubBoxFood(event) {
 		const target = event.target.closest(`.process-data`)
 
 		if (target) {
 			this.shadowRoot.querySelector(`main`).insertAdjacentHTML(`beforeend`, `<modal-food></modal-food>`)
-		}		
+		}
+	}
+
+	onClickSubBoxShuttle(event) {
+		const target = event.target.closest(`.process-data`)
+
+		if (target) {
+			this.shadowRoot.querySelector(`main`).insertAdjacentHTML(`beforeend`, `<modal-shuttle></modal-shuttle>`)
+		}
 	}
 
 	onAnimatedEnd(event) {
