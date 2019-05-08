@@ -26,7 +26,7 @@ class ModalShuttle extends HTMLElement {
 						min-width: 100% !important;
 					}
 
-					#operations-tag-v1, #operations-v1-post_categorize_chat, #operations-v1-질문_추가, .response-col_status, #operations-v1-셔틀_버스_정보_조회 {
+					#operations-tag-v1, #operations-v1-post_categorize_chat, #operations-v1-질문_추가, .response-col_status, #operations-v1-셔틀_버스_정보_조회, .opblock:not([id*=현재시간]) {
 						display: none;
 					}
 				</style>
