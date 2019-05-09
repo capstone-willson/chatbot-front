@@ -47,4 +47,7 @@ export default {
 	PROCESS_DATA_BUS: `셔틀버스`,
 	PROCESS_DATA_QUERY: `사용자 질문`,
 	PROCESS_DATA_QUESTION: `사전 질문`,
+
+	PROCESS_ANALYSIS_SIMILAR: `질문 유사도`,
+	PROCESS_ANALYSIS_MORPHOLOGICAL: `형태소 분석`,
 }

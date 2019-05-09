@@ -1,6 +1,7 @@
 import {html, render} from '../../node_modules/lit-html/lit-html.js'
 import './modal-food.js'
 import './modal-shuttle.js'
+import './modal-query.js'
 
 class BotSettingBody extends HTMLElement {
 	constructor() {
@@ -8,34 +9,66 @@ class BotSettingBody extends HTMLElement {
 		this.attachShadow({ mode: `open` })
 		render(this.render(), this.shadowRoot)		
 		
-		this.eventClickProcessBox = this.onClickProcessBox.bind(this)
+		this.eventClickProcessBoxData = this.onClickProcessBoxData.bind(this)
+		this.eventClickProcessBoxAnalysis = this.onClickProcessBoxAnalysis.bind(this)
 		this.eventClickSubBoxFood = this.onClickSubBoxFood.bind(this)
 		this.eventClickSubBoxShuttle = this.onClickSubBoxShuttle.bind(this)
+		this.eventClickSubBoxQuery = this.onClickSubBoxQuery.bind(this)
 		this.eventAnimatedEnd = this.onAnimatedEnd.bind(this)
 	}
 
 	connectedCallback() {				
-		this.shadowRoot.querySelector(`.process-data-collection`).addEventListener(`click`, this.eventClickProcessBox, true)
+		this.shadowRoot.querySelector(`.process-data-collection`).addEventListener(`click`, this.eventClickProcessBoxData, true)
+		this.shadowRoot.querySelector(`.process-data-analysis`).addEventListener(`click`, this.eventClickProcessBoxAnalysis, true)
 		this.shadowRoot.querySelector(`.process-data.food`).addEventListener(`click`, this.eventClickSubBoxFood, true)
 		this.shadowRoot.querySelector(`.process-data.bus`).addEventListener(`click`, this.eventClickSubBoxShuttle, true)
-		this.shadowRoot.querySelector(`main`).addEventListener(`transitionend`, this.eventAnimatedEnd, true)
+		this.shadowRoot.querySelector(`.process-data.queries`).addEventListener(`click`, this.eventClickSubBoxQuery, true)
+		this.shadowRoot.querySelector(`main`).addEventListener(`transitionend`, this.eventAnimatedEnd, true)	
 	}
 
 	disconnectedCallback() {
-		this.shadowRoot.querySelector(`.process-data-collection`).removeEventListener(`click`, this.eventClickProcessBox, true)
+		this.shadowRoot.querySelector(`.process-data-collection`).removeEventListener(`click`, this.eventClickProcessBoxData, true)
+		this.shadowRoot.querySelector(`.process-data-analysis`).removeEventListener(`click`, this.eventClickProcessBoxAnalysis, true)
 		this.shadowRoot.querySelector(`.process-data.food`).removeEventListener(`click`, this.eventClickSubBoxFood, true)
 		this.shadowRoot.querySelector(`.process-data.bus`).removeEventListener(`click`, this.eventClickSubBoxShuttle, true)
+		this.shadowRoot.querySelector(`.process-data.queries`).removeEventListener(`click`, this.eventClickSubBoxQuery, true)
 		this.shadowRoot.querySelector(`main`).removeEventListener(`transitionend`, this.eventAnimatedEnd, true)
 	}	
 
-	onClickProcessBox(event) {
-		const target = event.target	
+	onClickProcessBoxData(event) {
+		const target = event.target			
 
 		if (target) {
 			const array = [`.process-data-collection`, `.food`, `.bus`, `.queries`, `.questions`]
 
 			array.forEach(each => {
 				this.shadowRoot.querySelector(each).classList.toggle(`clicked`)
+			})
+
+			this.shadowRoot.querySelectorAll(`.process-box:not(.process-data-collection)`).forEach(box => {
+				box.classList.remove(`clicked`)
+			})
+			this.shadowRoot.querySelectorAll(`.process-sub-box:not(.process-data)`).forEach(subBox => {
+				subBox.classList.remove(`clicked`)
+			})
+		}
+	}
+
+	onClickProcessBoxAnalysis(event) {
+		const target = event.target	
+
+		if (target) {
+			const array = [`.process-data-analysis`, `.similar-distance`, `.morphological`]
+
+			array.forEach(each => {
+				this.shadowRoot.querySelector(each).classList.toggle(`clicked`)
+			})
+
+			this.shadowRoot.querySelectorAll(`.process-box:not(.process-data-analysis)`).forEach(box => {
+				box.classList.remove(`clicked`)
+			})
+			this.shadowRoot.querySelectorAll(`.process-sub-box:not(.process-analysis)`).forEach(subBox => {
+				subBox.classList.remove(`clicked`)
 			})
 		}
 	}
@@ -56,24 +89,38 @@ class BotSettingBody extends HTMLElement {
 		}
 	}
 
-	onAnimatedEnd(event) {
-		const target = event.target
-		if (event.propertyName === `margin-left` && target.classList.contains(`process-data-collection`)) {
-			this.emptyLine()
-			this.connectLine(target, this.shadowRoot.querySelector(`.food`))
-			this.connectLine(target, this.shadowRoot.querySelector(`.bus`))
-			this.connectLine(target, this.shadowRoot.querySelector(`.queries`))
-			this.connectLine(target, this.shadowRoot.querySelector(`.questions`))
+	onClickSubBoxQuery(event) {
+		const target = event.target.closest(`.process-data`)
+
+		if (target) {
+			this.shadowRoot.querySelector(`main`).insertAdjacentHTML(`beforeend`, `<modal-query></modal-query>`)
 		}
 	}
 
-	emptyLine() {
-		const svg = this.shadowRoot.querySelector(`.svg-line`)
+	onAnimatedEnd(event) {
+		const dataBox = this.shadowRoot.querySelector(`.process-data-collection`)
+		const analysisBox = this.shadowRoot.querySelector(`.process-data-analysis`)
+
+		if (event.propertyName === `margin-left`) {
+			this.emptyLine(``)
+			this.connectLine(dataBox, this.shadowRoot.querySelector(`.food`), ``)
+			this.connectLine(dataBox, this.shadowRoot.querySelector(`.bus`), ``)
+			this.connectLine(dataBox, this.shadowRoot.querySelector(`.queries`), ``)
+			this.connectLine(dataBox, this.shadowRoot.querySelector(`.questions`), ``)
+
+			this.emptyLine(`-2`)
+			this.connectLine(analysisBox, this.shadowRoot.querySelector(`.similar-distance`), `-2`)
+			this.connectLine(analysisBox, this.shadowRoot.querySelector(`.morphological`), `-2`)
+		}
+	}
+
+	emptyLine(line) {
+		const svg = this.shadowRoot.querySelector(`.svg-line${line}`)
 		svg.innerHTML = ``
 	}
 
-	connectLine(div1, div2) {	
-		const svg = this.shadowRoot.querySelector(`.svg-line`)
+	connectLine(div1, div2, line) {	
+		const svg = this.shadowRoot.querySelector(`.svg-line${line}`)
 
 		svg.innerHTML +=`
 				<line
@@ -112,11 +159,22 @@ class BotSettingBody extends HTMLElement {
 					<p>${i18next.t(`PROCESS_DATA_QUESTION`)}</p>	
 				</span>
 				<!-- 데이터 수집 하위박스 END -->
-
+				
 				<span class='process-box process-data-analysis'>
 					<object class='process-box-img' type="image/svg+xml" data="../../images/search.svg" width='50' height='50'></object>
 					<p>${i18next.t(`PROCESS_DATA_ANALYSIS`)}</p>
 				</span>
+				<!-- 데이터 분석 하위박스 START -->
+				<span class='process-sub-box process-analysis similar-distance'>
+					<object class='process-box-img' type="image/svg+xml" data="../../images/arrows-alt.svg" width='30' height='30'></object>
+					<p>${i18next.t(`PROCESS_ANALYSIS_SIMILAR`)}</p>	
+				</span>
+				<span class='process-sub-box process-analysis morphological'>
+					<object class='process-box-img' type="image/svg+xml" data="../../images/poll.svg" width='30' height='30'></object>
+					<p>${i18next.t(`PROCESS_ANALYSIS_MORPHOLOGICAL`)}</p>	
+				</span>
+				<!-- 데이터 분석 하위박스 END -->
+
 				<span class='process-box process-data-detail-analysis'>
 					<object class='process-box-img' type="image/svg+xml" data="../../images/search-plus.svg" width='50' height='50'></object>
 					<p>${i18next.t(`PROCESS_DATA_DETAIL`)}</p>
@@ -127,7 +185,8 @@ class BotSettingBody extends HTMLElement {
 				</span>
 			</main>
 
-			<svg class='svg-line'></svg>			
+			<svg class='svg-line'></svg>
+			<svg class='svg-line-2'></svg>
 		`
 	}
 }
@@ -303,6 +362,11 @@ const style = html`
 		background-color: #6B7EFC;
 	}
 
+	.similar-distance, .morphological {
+		grid-area: b;
+		background-color: #6B7EFC;
+	}
+
 	.process-sub-box.clicked {
 		display: flex;
 		transform: translate(-50%, -50%);
@@ -330,12 +394,20 @@ const style = html`
 		left: calc(50% - 100px);
 	}
 
-	.svg-line {
+	.similar-distance.clicked {
+		left: calc(50% - 100px);
+	}
+
+	.morphological.clicked {
+		left: calc(50% + 100px);
+	}
+
+	.svg-line, .svg-line-2 {
 		position: absolute;
 		top: 0;
 		left: 0;
 		width: 100%;
-		height: 100vh;
+		height: 100%;
 		pointer-events: none;
 		z-index: 0;
 	}
