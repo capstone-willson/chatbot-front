@@ -8,7 +8,7 @@ export default {
 	BOT_SETTING_TITLE: `하냥이 봇 설정`,	
 	MENU_BOT_SETTING: `봇 커스텀 설정`,
 	MENU_CHAT_WINDOW: `채팅창으로 이동`,
-	CONVERT_RIVESCRIPT: `RiveScript로 전환`,
+	MENU_CHECK_ANALYSIS: `문장 분석`,
 
 	NO_IMPLEMENT: `현재는 지원하지 않는 기능입니다.`,
 
@@ -50,4 +50,11 @@ export default {
 
 	PROCESS_ANALYSIS_SIMILAR: `질문 유사도`,
 	PROCESS_ANALYSIS_MORPHOLOGICAL: `형태소 분석`,
+
+	PROCESS_VISUAL_INTERSECTION: `질문 유사도`,
+	PROCESS_VISUAL_INTER_TITLE: `질문 유사도 분석 시각화`,
+	PROCESS_VISUAL_INTER_QUERY: `사용자 입력 질문`,	
+
+	PROCESS_VISUAL_VECTOR: `벡터 유사도`,
+	PROCESS_VISUAL_VECTOR_TITLE: `질문간 벡터 유사도 비교`,
 }

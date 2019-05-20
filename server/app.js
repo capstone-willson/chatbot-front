@@ -5,6 +5,7 @@ const cookieParser = require(`cookie-parser`)
 const logger = require(`morgan`)
 const cors = require(`cors`)
 const helmet = require(`helmet`)
+const compression = require('compression')
 
 const indexRouter = require(`./routes/index`)
 
@@ -13,8 +14,10 @@ const indexRouter = require(`./routes/index`)
 // 몽구스, 노드-스케줄러 실행
 const connect = require(`./mongodb/mongoose.js`)
 const doScheduler = require(`./lib/save-school-food-list.js`)
+// const doScheduler2 = require(`./lib/save-class-info.js`)
 
 const app = express()
+app.use(compression())
 app.use(cors())
 app.use(helmet({
 	frameguard: false
@@ -22,6 +25,7 @@ app.use(helmet({
 
 connect()
 doScheduler()
+// doScheduler2()
 
 const swaggerJSDoc = require(`swagger-jsdoc`)
 const swaggerOption = require(`./swagger-jsdoc.js`)
@@ -30,8 +34,9 @@ const swaggerUi = require(`swagger-ui-express`)
 
 // view engine setup
 app.set(`views`, path.join(__dirname, `views`))
-// app.engine(`html`, require(`ejs`).renderFile)
-app.set(`view engine`, `pug`)
+app.engine(`html`, require(`ejs`).renderFile)
+app.set(`view engine`, `html`)
+// app.set(`view engine`, `pug`)
 
 app.use(logger(`dev`))
 app.use(express.json())

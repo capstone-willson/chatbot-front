@@ -15,7 +15,10 @@ module.exports = () => {
 }
 
 async function crawl(place) {	
-	const browser = await puppeteer.launch()
+	const browser = await puppeteer.launch({
+		headless: true,
+		args: [`--no-sandbox`, `--disable-setuid-sandbox`],
+	})
 	const page = await browser.newPage()
 	const date = new Date()
 	const year = date.getFullYear()
@@ -81,7 +84,7 @@ async function crawl(place) {
 		if (err) {
 			console.error(err)
 		} else {
-			// console.info(_result) 
+			console.info(_result) 
 		}
 	}) 
 }
