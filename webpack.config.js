@@ -9,7 +9,7 @@ module.exports = {
 	output: {
 		path: path.resolve(__dirname, `server/public/javascripts`),
 		filename: `[name].js`,
-		publicPath: `/src/`,
+		publicPath: `images/`,
 	},
 	module: {
 		rules: [
@@ -39,7 +39,7 @@ module.exports = {
 				test: /\.(png|svg|jpe?g|gif)$/,
 				loader:`file-loader`,
 				options: {
-					publicPath: `/src/`,
+					publicPath: `images/`,
 					name: `[name].[ext]?[hash]`,
 				},
 			},
@@ -47,7 +47,7 @@ module.exports = {
 				test: /\.(png|svg|jpe?g|gif)$/,
 				loader:`url-loader`,
 				options: {
-					publicPath: `/src/`,
+					publicPath: `images/`,
 					name: `[name].[ext]?[hash]`,
 					limit: 10000,
 				},
