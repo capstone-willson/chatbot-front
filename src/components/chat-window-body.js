@@ -89,6 +89,35 @@ class ChatWindowBody extends HTMLElement {
 		observer.observe(this.shadowRoot, config)
 	}
 
+	// async showMap(location) {
+	// 	this.reply(`<div id='map' style='width:400px;height:300px;'></div>`)
+
+	// 	naver.maps.Service.geocode({
+	// 		query: location,
+	// 	}, (status, response) => {
+	// 		const botChat = this.shadowRoot.querySelectorAll(`bot-chat-balloon`)
+
+	// 		if (status !== naver.maps.Service.Status.OK) {
+	// 			throw new Error(`Something wrong!`)
+	// 		}
+	
+	// 		const result = response.v2,
+	// 			items = result.addresses
+	
+	// 		console.log(items)
+	// 		const mapOptions = {
+	// 			center: new naver.maps.LatLng(items[0][`y`], items[0][`x`]),
+	// 			zoom: 12,
+	// 		}
+			
+	// 		const map = new naver.maps.Map(botChat[botChat.length - 1].shadowRoot.querySelector(`#map`), mapOptions)
+	// 	})		
+	// }
+
+	sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms))
+	}
+
 	render() {
 		return html`
 			${style}

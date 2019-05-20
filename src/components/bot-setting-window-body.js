@@ -2,6 +2,8 @@ import {html, render} from '../../node_modules/lit-html/lit-html.js'
 import './modal-food.js'
 import './modal-shuttle.js'
 import './modal-query.js'
+import './modal-visual-intersection.js'
+import './modal-visual-vector.js'
 
 class BotSettingBody extends HTMLElement {
 	constructor() {
@@ -11,27 +13,36 @@ class BotSettingBody extends HTMLElement {
 		
 		this.eventClickProcessBoxData = this.onClickProcessBoxData.bind(this)
 		this.eventClickProcessBoxAnalysis = this.onClickProcessBoxAnalysis.bind(this)
+		this.eventClickProcessBoxVisual = this.onClickProcessBoxVisual.bind(this)
 		this.eventClickSubBoxFood = this.onClickSubBoxFood.bind(this)
 		this.eventClickSubBoxShuttle = this.onClickSubBoxShuttle.bind(this)
 		this.eventClickSubBoxQuery = this.onClickSubBoxQuery.bind(this)
+		this.eventClickSubBoxIntersection = this.onClickSubBoxIntersection.bind(this)
+		this.eventClickSubBoxVector = this.onClickSubBoxVector.bind(this)
 		this.eventAnimatedEnd = this.onAnimatedEnd.bind(this)
 	}
 
 	connectedCallback() {				
 		this.shadowRoot.querySelector(`.process-data-collection`).addEventListener(`click`, this.eventClickProcessBoxData, true)
 		this.shadowRoot.querySelector(`.process-data-analysis`).addEventListener(`click`, this.eventClickProcessBoxAnalysis, true)
+		this.shadowRoot.querySelector(`.process-data-visualization`).addEventListener(`click`, this.eventClickProcessBoxVisual, true)
 		this.shadowRoot.querySelector(`.process-data.food`).addEventListener(`click`, this.eventClickSubBoxFood, true)
 		this.shadowRoot.querySelector(`.process-data.bus`).addEventListener(`click`, this.eventClickSubBoxShuttle, true)
 		this.shadowRoot.querySelector(`.process-data.queries`).addEventListener(`click`, this.eventClickSubBoxQuery, true)
+		this.shadowRoot.querySelector(`.process-visual.intersection`).addEventListener(`click`, this.eventClickSubBoxIntersection, true)
+		this.shadowRoot.querySelector(`.process-visual.vector`).addEventListener(`click`, this.eventClickSubBoxVector, true)
 		this.shadowRoot.querySelector(`main`).addEventListener(`transitionend`, this.eventAnimatedEnd, true)	
 	}
 
 	disconnectedCallback() {
 		this.shadowRoot.querySelector(`.process-data-collection`).removeEventListener(`click`, this.eventClickProcessBoxData, true)
 		this.shadowRoot.querySelector(`.process-data-analysis`).removeEventListener(`click`, this.eventClickProcessBoxAnalysis, true)
+		this.shadowRoot.querySelector(`.process-data-visualization`).removeEventListener(`click`, this.eventClickProcessBoxVisual, true)
 		this.shadowRoot.querySelector(`.process-data.food`).removeEventListener(`click`, this.eventClickSubBoxFood, true)
 		this.shadowRoot.querySelector(`.process-data.bus`).removeEventListener(`click`, this.eventClickSubBoxShuttle, true)
 		this.shadowRoot.querySelector(`.process-data.queries`).removeEventListener(`click`, this.eventClickSubBoxQuery, true)
+		this.shadowRoot.querySelector(`.process-visual.intersection`).removeEventListener(`click`, this.eventClickSubBoxIntersection, true)
+		this.shadowRoot.querySelector(`.process-visual.vector`).removeEventListener(`click`, this.eventClickSubBoxVector, true)
 		this.shadowRoot.querySelector(`main`).removeEventListener(`transitionend`, this.eventAnimatedEnd, true)
 	}	
 
@@ -73,11 +84,34 @@ class BotSettingBody extends HTMLElement {
 		}
 	}
 
+	onClickProcessBoxVisual(event) {
+		const target = event.target	
+
+		if (target) {
+			const array = [`.process-data-visualization`, `.intersection`, `.vector`]
+
+			array.forEach(each => {
+				this.shadowRoot.querySelector(each).classList.toggle(`clicked`)
+			})
+
+			this.shadowRoot.querySelectorAll(`.process-box:not(.process-data-visualization)`).forEach(box => {
+				box.classList.remove(`clicked`)
+			})
+			this.shadowRoot.querySelectorAll(`.process-sub-box:not(.process-visual)`).forEach(subBox => {
+				subBox.classList.remove(`clicked`)
+			})
+		}
+	}
+
 	onClickSubBoxFood(event) {
 		const target = event.target.closest(`.process-data`)
 
 		if (target) {
-			this.shadowRoot.querySelector(`main`).insertAdjacentHTML(`beforeend`, `<modal-food></modal-food>`)
+			if (this.shadowRoot.querySelector(`main modal-food`)) {
+				this.shadowRoot.querySelector(`main modal-food`).style.display = `flex`
+			} else {
+				this.shadowRoot.querySelector(`main`).insertAdjacentHTML(`beforeend`, `<modal-food></modal-food>`)
+			}		
 		}
 	}
 
@@ -85,7 +119,11 @@ class BotSettingBody extends HTMLElement {
 		const target = event.target.closest(`.process-data`)
 
 		if (target) {
-			this.shadowRoot.querySelector(`main`).insertAdjacentHTML(`beforeend`, `<modal-shuttle></modal-shuttle>`)
+			if (this.shadowRoot.querySelector(`main modal-shuttle`)) {
+				this.shadowRoot.querySelector(`main modal-shuttle`).style.display = `flex`
+			} else {
+				this.shadowRoot.querySelector(`main`).insertAdjacentHTML(`beforeend`, `<modal-shuttle></modal-shuttle>`)
+			}		
 		}
 	}
 
@@ -93,13 +131,42 @@ class BotSettingBody extends HTMLElement {
 		const target = event.target.closest(`.process-data`)
 
 		if (target) {
-			this.shadowRoot.querySelector(`main`).insertAdjacentHTML(`beforeend`, `<modal-query></modal-query>`)
+			if (this.shadowRoot.querySelector(`main modal-query`)) {
+				this.shadowRoot.querySelector(`main modal-query`).style.display = `flex`
+			} else {
+				this.shadowRoot.querySelector(`main`).insertAdjacentHTML(`beforeend`, `<modal-query></modal-query>`)
+			}		
+		}
+	}
+
+	onClickSubBoxIntersection(event) {
+		const target = event.target.closest(`.process-visual`)
+
+		if (target) {
+			if (this.shadowRoot.querySelector(`main modal-visual-intersection`)) {
+				this.shadowRoot.querySelector(`main modal-visual-intersection`).style.display = `flex`
+			} else {
+				this.shadowRoot.querySelector(`main`).insertAdjacentHTML(`beforeend`, `<modal-visual-intersection></modal-visual-intersection>`)
+			}		
+		}
+	}
+
+	onClickSubBoxVector(event) {
+		const target = event.target.closest(`.process-visual`)
+
+		if (target) {
+			if (this.shadowRoot.querySelector(`main modal-visual-vector`)) {
+				this.shadowRoot.querySelector(`main modal-visual-vector`).style.display = `flex`
+			} else {
+				this.shadowRoot.querySelector(`main`).insertAdjacentHTML(`beforeend`, `<modal-visual-vector></modal-visual-vector>`)
+			}		
 		}
 	}
 
 	onAnimatedEnd(event) {
 		const dataBox = this.shadowRoot.querySelector(`.process-data-collection`)
 		const analysisBox = this.shadowRoot.querySelector(`.process-data-analysis`)
+		const visualBox = this.shadowRoot.querySelector(`.process-data-visualization`)
 
 		if (event.propertyName === `margin-left`) {
 			this.emptyLine(``)
@@ -111,6 +178,10 @@ class BotSettingBody extends HTMLElement {
 			this.emptyLine(`-2`)
 			this.connectLine(analysisBox, this.shadowRoot.querySelector(`.similar-distance`), `-2`)
 			this.connectLine(analysisBox, this.shadowRoot.querySelector(`.morphological`), `-2`)
+
+			this.emptyLine(`-4`)
+			this.connectLine(visualBox, this.shadowRoot.querySelector(`.intersection`), `-4`)
+			this.connectLine(visualBox, this.shadowRoot.querySelector(`.vector`), `-4`)
 		}
 	}
 
@@ -137,56 +208,69 @@ class BotSettingBody extends HTMLElement {
 			${style}
 			<main>
 				<span class='process-box process-data-collection'>
-					<object class='process-box-img' type="image/svg+xml" data="../../images/data.svg" width='50' height='50'></object>
+					<img class='process-box-img' src="../../images/data.svg" width='50' height='50' />
 					<p>${i18next.t(`PROCESS_DATA_COLLECTION`)}</p>					
 				</span>
 
-				<!-- 데이터 수집 하위박스 START -->
+				<!-- 1. 데이터 수집 하위박스 START -->
 				<span class='process-sub-box process-data food'>
-					<object class='process-box-img' type="image/svg+xml" data="../../images/food.svg" width='30' height='30'></object>
+					<img class='process-box-img' src="../../images/food.svg" width='30' height='30' />
 					<p>${i18next.t(`PROCESS_DATA_FOOD`)}</p>			
 				</span>
 				<span class='process-sub-box process-data bus'>
-					<object class='process-box-img' type="image/svg+xml" data="../../images/bus.svg" width='30' height='30'></object>
+					<img class='process-box-img' src='../../images/bus.svg' width='30' height='30' />
 					<p>${i18next.t(`PROCESS_DATA_BUS`)}</p>	
 				</span>
 				<span class='process-sub-box process-data queries'>
-					<object class='process-box-img' type="image/svg+xml" data="../../images/queries.svg" width='30' height='30'></object>
+					<img class='process-box-img' src='../../images/queries.svg' width='30' height='30' />
 					<p>${i18next.t(`PROCESS_DATA_QUERY`)}</p>	
 				</span>
 				<span class='process-sub-box process-data questions'>
-					<object class='process-box-img' type="image/svg+xml" data="../../images/question.svg" width='30' height='30'></object>
+					<img class='process-box-img' src='../../images/question.svg' width='30' height='30' />
 					<p>${i18next.t(`PROCESS_DATA_QUESTION`)}</p>	
 				</span>
 				<!-- 데이터 수집 하위박스 END -->
 				
 				<span class='process-box process-data-analysis'>
-					<object class='process-box-img' type="image/svg+xml" data="../../images/search.svg" width='50' height='50'></object>
+					<img class='process-box-img' src='../../images/search.svg' width='50' height='50' />
 					<p>${i18next.t(`PROCESS_DATA_ANALYSIS`)}</p>
 				</span>
-				<!-- 데이터 분석 하위박스 START -->
+				<!-- 2. 데이터 분석 하위박스 START -->
 				<span class='process-sub-box process-analysis similar-distance'>
-					<object class='process-box-img' type="image/svg+xml" data="../../images/arrows-alt.svg" width='30' height='30'></object>
+					<img class='process-box-img' src='../../images/arrows-alt.svg' width='30' height='30' />
 					<p>${i18next.t(`PROCESS_ANALYSIS_SIMILAR`)}</p>	
 				</span>
 				<span class='process-sub-box process-analysis morphological'>
-					<object class='process-box-img' type="image/svg+xml" data="../../images/poll.svg" width='30' height='30'></object>
+					<img class='process-box-img' src='../../images/poll.svg' width='30' height='30' />
 					<p>${i18next.t(`PROCESS_ANALYSIS_MORPHOLOGICAL`)}</p>	
 				</span>
 				<!-- 데이터 분석 하위박스 END -->
 
 				<span class='process-box process-data-detail-analysis'>
-					<object class='process-box-img' type="image/svg+xml" data="../../images/search-plus.svg" width='50' height='50'></object>
+					<img class='process-box-img' src='../../images/search-plus.svg' width='50' height='50' />
 					<p>${i18next.t(`PROCESS_DATA_DETAIL`)}</p>
-				</span>
+				</span>				
+
 				<span class='process-box process-data-visualization'>
-					<object class='process-box-img' type="image/svg+xml" data="../../images/chart.svg" width='50' height='50'></object>
+					<img class='process-box-img' src='../../images/chart.svg' width='50' height='50' />
 					<p>${i18next.t(`PROCESS_DATA_VISUALIZATION`)}</p>
 				</span>
+
+				<!-- 4. 데이터 시각화 하위박스 START -->
+				<span class='process-sub-box process-visual intersection'>					
+					<img class='process-box-img' src='../../images/cogs.svg' width='30' height='30' />
+					<p>${i18next.t(`PROCESS_VISUAL_INTERSECTION`)}</p>
+				</span>
+				<span class='process-sub-box process-visual vector'>
+					<img class='process-box-img' src='../../images/vector.svg' width='30' height='30' />					
+					<p>${i18next.t(`PROCESS_VISUAL_VECTOR`)}</p>	
+				</span>
+				<!-- 데이터 상세분석 하위박스 END -->
 			</main>
 
 			<svg class='svg-line'></svg>
 			<svg class='svg-line-2'></svg>
+			<svg class='svg-line-4'></svg>
 		`
 	}
 }
@@ -214,7 +298,7 @@ const style = html`
 		justify-content: center;
 		justify-items: center;
 		align-content: center;
-		margin-top: 20px;
+		padding-top: 20px;
 	}
 
 	.process-box {
@@ -367,6 +451,11 @@ const style = html`
 		background-color: #6B7EFC;
 	}
 
+	.intersection, .vector {
+		grid-area: d;
+		background-color: #6B7EFC;
+	}
+
 	.process-sub-box.clicked {
 		display: flex;
 		transform: translate(-50%, -50%);
@@ -402,7 +491,17 @@ const style = html`
 		left: calc(50% + 100px);
 	}
 
-	.svg-line, .svg-line-2 {
+	.intersection.clicked {
+		top: calc(50% - 100px);
+		left: calc(50% + 100px);
+	}
+
+	.vector.clicked {
+		top: calc(50% + 100px);
+		left: calc(50% + 100px);
+	}
+
+	.svg-line, .svg-line-2, .svg-line-4 {
 		position: absolute;
 		top: 0;
 		left: 0;

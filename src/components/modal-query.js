@@ -14,7 +14,7 @@ class ModalQuery extends HTMLElement {
 		this.addEventListener(`click`, this.eventClickBack, false)
 		this.shadowRoot.addEventListener(`click`, event => event.stopPropagation(), false)
 
-		this.shadowRoot.querySelector(`iframe`).addEventListener(`load`, async () => {
+		this.shadowRoot.querySelector(`iframe`).addEventListener(`load`, () => {
 			const iframe = this.shadowRoot.querySelector(`iframe`).contentDocument
 			iframe.head.insertAdjacentHTML(`beforeend`, `
 				<style>
@@ -26,9 +26,7 @@ class ModalQuery extends HTMLElement {
 						min-width: 100% !important;
 					}
 				</style>
-			`)
-
-			alert(`서비스 준비중`)	
+			`)			
 		})
 
 	}
@@ -70,6 +68,7 @@ const style = html`
 		left: 0;
 		width: 100vw;
 		height: 100vh;
+		background-color: rgba(0, 0, 0, 0.4);
 		z-index: 50;
 	}
 

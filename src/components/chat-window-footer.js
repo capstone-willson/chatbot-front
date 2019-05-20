@@ -1,7 +1,7 @@
 import {html, render} from '../../node_modules/lit-html/lit-html.js'
-// import searchLibrary from '../modules/search-library.js'
+import searchLibrary from '../modules/search-library.js'
 // import searchFoodMenu from '../modules/search-food-menu.js'
-import chatWindowBody from './chat-window-body.js'
+// import chatWindowBody from './chat-window-body.js'
 
 class ChatWindowFooter extends HTMLElement {	
 	constructor() {
@@ -43,6 +43,8 @@ class ChatWindowFooter extends HTMLElement {
 
 		chatBody.send(sendText.value)		
 		
+		this.chatQuestionAnalysis(sendText.value)
+		this.replyChat(sendText.value)
 		// chatBody.botSay(sendText.value)
 
 		// searchLibrary.replyAboutLibrary(sendText.value)
@@ -50,6 +52,133 @@ class ChatWindowFooter extends HTMLElement {
 		// this.replyByPingpongAPI(sendText.value)
 		// document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`).reply(`<bus-info question='${sendText.value}'></bus-info>`)
 		sendText.value = ``		
+	}
+
+	replyChat(text) {
+		const xhr = new XMLHttpRequest()
+		const formData = new FormData()
+		formData.append(`chat`, text)
+
+		if(!xhr) {
+			throw new Error(`XHR 호출 불가`)			
+		}
+
+		xhr.open(`POST`, `http://34.80.42.161:8000/v1/chat`)
+		xhr.addEventListener(`readystatechange`, () => {
+			if (xhr.readyState === xhr.DONE) {
+				if (xhr.status === 200 || xhr.status === 201) {	
+					// JSON.parse(xhr.responseText)[`answer`][`mode`]
+					// console.log(JSON.parse(xhr.responseText)[`answer`]) 
+					if (JSON.parse(xhr.responseText)[`answer`][`mode`] === `talk`) {						
+						// this.replyByPingpongAPI(text)
+						this.chatAboutTalk(text)
+					} else if (JSON.parse(xhr.responseText)[`answer`][`mode`] === `book`) {
+						searchLibrary.replyAboutLibrary(text)
+					} else if (JSON.parse(xhr.responseText)[`answer`][`mode`] || JSON.parse(xhr.responseText)[`answer`][`mode`] === `shuttle_bus`) {
+						document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`).reply(`<bus-info question='${text}'></bus-info>`)
+					}
+				}
+			}			
+		})
+		xhr.send(formData)
+	}
+
+	chatAboutTalk(text) {		
+		const chatBody = document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`)
+		const xhr = new XMLHttpRequest()
+		const formData = new FormData()
+		formData.append(`chat`, text)
+
+		if(!xhr) {
+			throw new Error(`XHR 호출 불가`)			
+		}
+
+		xhr.open(`POST`, `http://34.80.42.161:8000/v1/chat`)
+		xhr.addEventListener(`readystatechange`, () => {
+			if (xhr.readyState === xhr.DONE) {
+				if (xhr.status === 200 || xhr.status === 201) {		
+					console.info(JSON.parse(xhr.responseText))
+					chatBody.reply(JSON.parse(xhr.responseText)[`answer`][`answer`])
+				}
+			}			
+		})
+		xhr.send(formData)		
+	}
+
+	chatQuestionAnalysis(text) {
+		const checkbox = document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-header`).shadowRoot.querySelector(`chat-window-menu`).shadowRoot.querySelector(`#check-analysis`)
+		if (checkbox.checked) {
+			const xhr = new XMLHttpRequest()
+			const formData = new FormData()
+			formData.append(`chat`, text)
+	
+			if(!xhr) {
+				throw new Error(`XHR 호출 불가`)			
+			}
+	
+			xhr.open(`POST`, `http://34.80.42.161:8000/v1/analysis/similarity/morphs`)
+			xhr.addEventListener(`readystatechange`, () => {
+				if (xhr.readyState === xhr.DONE) {
+					if (xhr.status === 200 || xhr.status === 201) {		
+						console.info(JSON.parse(xhr.responseText))
+						this.insertContent(JSON.parse(xhr.responseText))
+							.writeSentence()
+							.writeText()
+							.scroll()						
+					}
+				}			
+			})
+			xhr.send(formData)
+		}		
+	}
+
+	insertContent(json) {
+		const chatBody = document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`)
+		const chatWindow = document.querySelector(`chat-window`)
+
+		return {
+			writeSentence(select = 1) {
+				for (let i = 1; i < 4; i++) {
+					chatBody.reply(`${json[`question_${i}`][`text`]} (SCORE: ${Math.floor(json[`question_${i}`][`score`] * 100)})`)
+				}
+				chatBody.reply(`<div id='venn'></div>`)
+				this.darwVenn(++Object.keys(json[`question_${select}`][`only_in_query`]).length, ++Object.keys(json[`question_${select}`][`only_in_question`]).length, Object.keys(json[`question_${select}`][`in_both`]).length)
+				return this
+			},
+			darwVenn(size1 = 6, size2 = 6, sizeIn = 2) {
+				const sets = [ {sets: [`입력값`], size: size1},
+					{sets: [`유사값`], size: size2},
+					{sets: [`입력값`,`유사값`], size: sizeIn}]
+				
+				const chart = venn.VennDiagram()
+					.width(380)
+					.height(250)
+
+				const botChat = chatBody.shadowRoot.querySelectorAll(`bot-chat-balloon`)
+				d3.select(botChat[botChat.length - 1].shadowRoot.querySelector(`#venn`))
+					.datum(sets)
+					.call(chart)
+
+				return this
+			},
+			writeText() {
+				chatBody.reply(`
+					<form action='http://34.80.42.161:8000/v1/db/questions/add' method='post' target='ifra'>
+						등록질문: <input id='text' name='text' type='text' /><br/>
+						등록답변: <input id='answer' name='answer' type='text' /><br/>
+						등록카테고리: <input id='category' name='category' type='text' />
+						<input id='' type='submit' value='전송' />
+					</form>
+					<iframe name='ifra'></iframe>
+				`)
+				return this
+			},
+			scroll() {
+				chatWindow.scrollToLast()
+
+				return this
+			},
+		}
 	}
 
 	replyAboutLibrary(text) {
@@ -150,7 +279,7 @@ class ChatWindowFooter extends HTMLElement {
 		if(!xhr) {
 			throw new Error(`XHR 호출 불가`)
 		}
-		xhr.open(`GET`, `http://localhost:8080/https://pingpong.us/api/reaction.php?custom=basic&query=${encodeURIComponent(text)}`)	
+		xhr.open(`GET`, `http://34.80.42.161:8080/https://pingpong.us/api/reaction.php?custom=basic&query=${encodeURIComponent(text)}`)	
 		xhr.setRequestHeader(`x-requested-with`, `XMLHttpRequest`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if(xhr.readyState === COMPLETED) {

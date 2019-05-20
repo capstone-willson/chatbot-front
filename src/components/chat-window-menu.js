@@ -52,6 +52,7 @@ class ChatWindowMenu extends HTMLElement {
 			${style}
 			<ul class='menu'>
 				<li class='bot-setting' title='${i18next.t(`MENU_BOT_SETTING`)}'>${i18next.t(`MENU_BOT_SETTING`)}</li>
+				<li class='check-analysis' title='${i18next.t(`MENU_CHECK_ANALYSIS`)}'><input type='checkbox' id='check-analysis' /><label for='check-analysis'>${i18next.t(`MENU_CHECK_ANALYSIS`)}</label></li>
 			</ul>
 		`
 	}
@@ -97,6 +98,10 @@ const style = html`
 
 	.menu li:hover {
 		background-color: #F0F0F0;
+	}
+
+	#check-analysis {
+		vertical-align: middle;
 	}
 </style>
 `
