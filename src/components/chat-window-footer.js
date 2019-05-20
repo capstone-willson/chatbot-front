@@ -55,6 +55,7 @@ class ChatWindowFooter extends HTMLElement {
 	}
 
 	replyChat(text) {
+		const chatBody = document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`)
 		const xhr = new XMLHttpRequest()
 		const formData = new FormData()
 		formData.append(`chat`, text)
@@ -68,14 +69,18 @@ class ChatWindowFooter extends HTMLElement {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {	
 					// JSON.parse(xhr.responseText)[`answer`][`mode`]
-					// console.log(JSON.parse(xhr.responseText)[`answer`]) 
-					if (JSON.parse(xhr.responseText)[`answer`][`mode`] === `talk`) {						
+					console.log(JSON.parse(xhr.responseText)) 
+					if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `talk`) {						
 						// this.replyByPingpongAPI(text)
 						this.chatAboutTalk(text)
-					} else if (JSON.parse(xhr.responseText)[`answer`][`mode`] === `book`) {
+					} else if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `book`) {
 						searchLibrary.replyAboutLibrary(text)
-					} else if (JSON.parse(xhr.responseText)[`answer`][`mode`] || JSON.parse(xhr.responseText)[`answer`][`mode`] === `shuttle_bus`) {
+					} else if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `shuttle_bus`) {
 						document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`).reply(`<bus-info question='${text}'></bus-info>`)
+					} else if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `prepared`) {
+						this.chatAboutTalk(text)
+					} else {
+						chatBody.reply(`민혁이가 이상하다냥`)
 					}
 				}
 			}			
@@ -100,7 +105,7 @@ class ChatWindowFooter extends HTMLElement {
 					console.info(JSON.parse(xhr.responseText))
 					chatBody.reply(JSON.parse(xhr.responseText)[`answer`][`answer`])
 				}
-			}			
+			}
 		})
 		xhr.send(formData)		
 	}
