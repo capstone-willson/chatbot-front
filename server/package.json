@@ -7,6 +7,7 @@
     "forever": "forever ./bin/www"
   },
   "dependencies": {
+    "@webcomponents/webcomponentsjs": "^2.2.10",
     "compression": "^1.7.4",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.5",
