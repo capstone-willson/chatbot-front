@@ -169,7 +169,7 @@ module.exports = {
         // \ 로 띄어쓰기 금지, 표준이 아닌데 관행으로 남음
         "no-multi-str": 1,
         // new를 사용한다면 담을 변수 필요
-        "no-new": 1,
+        // "no-new": 1,
         // 잘 안쓰는 스타일, 좋지 않은 관행
         "no-new-func": 2,
         // 잘 알고있는 객체는 new 금지(String, Number, Boolean)
@@ -276,5 +276,7 @@ module.exports = {
 		"d3": true,
 		"venn": true,
 		"naver": true,
+		"Chart": true,
+		"querySelectorShadowDom": true,
     }
 };
