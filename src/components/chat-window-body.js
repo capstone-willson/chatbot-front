@@ -17,6 +17,28 @@ class ChatWindowBody extends HTMLElement {
 
 	connectedCallback() {
 		this.chatWindow = document.querySelector(`chat-window`)
+
+		this.socket = io.connect(`http://34.80.42.161:8088`, {
+			path: `/socket.io`,
+		})
+
+		this.socket.on(`botSay`, data => {
+			this.replyFront(data)
+		})
+
+		this.socket.on(`userSay`, data => {
+			this.sendFront(data)
+		})
+
+		this.socket.on(`muted`, () => {
+			const chatFooter = querySelectorShadowDom.querySelectorDeep(`chat-window-footer`)
+			chatFooter.canTyping = false
+		})
+
+		this.socket.on(`unmuted`, () => {
+			const chatFooter = querySelectorShadowDom.querySelectorDeep(`chat-window-footer`)			
+			chatFooter.canTyping = true
+		})
 	}
 
 	loading_done() {
@@ -38,6 +60,11 @@ class ChatWindowBody extends HTMLElement {
 	}
 
 	reply(text) {
+		this.replyFront(text)
+		this.socket.emit(`reply`, text)	
+	}
+
+	replyFront(text) {
 		const main = this.shadowRoot.querySelector(`main`)
 		const ONE = 1, LAST_CHILD_NUM = main.children.length - ONE
 		const lastChat = main.children[LAST_CHILD_NUM]
@@ -56,6 +83,11 @@ class ChatWindowBody extends HTMLElement {
 	}
 
 	send(text) {
+		this.sendFront(text)
+		this.socket.emit(`question`, text)
+	}
+
+	sendFront(text) {
 		const main = this.shadowRoot.querySelector(`main`)
 		const ONE = 1, LAST_CHILD_NUM = main.children.length - ONE
 		const lastChat = main.children[LAST_CHILD_NUM]

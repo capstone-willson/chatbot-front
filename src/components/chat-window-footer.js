@@ -12,6 +12,9 @@ class ChatWindowFooter extends HTMLElement {
 
 		this.eventKeydownTextarea = this.onkeydownTextarea.bind(this)
 		this.eventClickSendButton = this.onClickSendButton.bind(this)
+		this.canTyping = true
+		this.canUserChat = true
+		this.canRemoteChat = false
 	}
 
 	connectedCallback() {
@@ -39,12 +42,48 @@ class ChatWindowFooter extends HTMLElement {
 
 	sendAndReply() {
 		const chatBody = document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`)
-		const sendText = this.shadowRoot.querySelector(`.send_text`)
-
-		chatBody.send(sendText.value)		
+		const sendText = this.shadowRoot.querySelector(`.send_text`)		
 		
-		this.chatQuestionAnalysis(sendText.value)
-		this.replyChat(sendText.value)
+		if (this.canUserChat) {
+			chatBody.send(sendText.value)
+		}
+
+		if (this.canRemoteChat) {
+			chatBody.reply(sendText.value)
+			chatBody.socket.emit(`replyRemote`, {
+				target: this.target,
+				chat: sendText.value,
+			})							
+
+			const xhr = new XMLHttpRequest()
+			const formData = new FormData()
+			const question = querySelectorShadowDom.querySelectorAllDeep(`my-chat-balloon .chat-content`)[querySelectorShadowDom.querySelectorAllDeep(`my-chat-balloon .chat-content`).length - 1].textContent
+			formData.append(`text`, question)
+			formData.append(`answer`, sendText.value)
+			formData.append(`category`, `talk`)
+
+			console.info(question, sendText.value)
+
+			if(!xhr) {
+				throw new Error(`XHR 호출 불가`)
+			}
+
+			xhr.open(`POST`, `http://34.80.42.161:8000/v1/db/questions/add`)
+			xhr.addEventListener(`readystatechange`, () => {
+				if (xhr.readyState === xhr.DONE) {
+					if (xhr.status === 200 || xhr.status === 201) {		
+						console.info(JSON.parse(xhr.responseText))
+						chatBody.reply(JSON.parse(xhr.responseText)[`answer`][`answer`])
+					}
+				}
+			})
+			xhr.send(formData)			
+		}
+
+		if (this.canTyping) {			
+			this.chatQuestionAnalysis(sendText.value)
+			this.replyChat(sendText.value)
+		}
 		// chatBody.botSay(sendText.value)
 
 		// searchLibrary.replyAboutLibrary(sendText.value)
@@ -69,7 +108,7 @@ class ChatWindowFooter extends HTMLElement {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {	
 					// JSON.parse(xhr.responseText)[`answer`][`mode`]
-					console.log(JSON.parse(xhr.responseText)) 
+					console.info(JSON.parse(xhr.responseText)) 
 					if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `talk`) {						
 						// this.replyByPingpongAPI(text)
 						this.chatAboutTalk(text)

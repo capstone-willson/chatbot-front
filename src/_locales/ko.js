@@ -9,6 +9,7 @@ export default {
 	MENU_BOT_SETTING: `봇 커스텀 설정`,
 	MENU_CHAT_WINDOW: `채팅창으로 이동`,
 	MENU_CHECK_ANALYSIS: `문장 분석`,
+	MENU_CHECK_BOT_MODE: `문장 학습모드`,
 
 	NO_IMPLEMENT: `현재는 지원하지 않는 기능입니다.`,
 

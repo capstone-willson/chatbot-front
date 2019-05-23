@@ -6,9 +6,9 @@ module.exports = () => {
 			mongoose.set(`debug`, true)
 		}
 
-		mongoose.connect(`mongodb://taeuk:dnrxo123@34.80.42.161:27017/admin`, {
-			user: `taeuk`,
-			pass: `dnrxo123`,
+		mongoose.connect(`mongodb://${process.env.MONGO_ID}:${process.env.MONGO_PASSWORD}@34.80.42.161:27017/admin`, {
+			user: process.env.MONGO_ID,
+			pass: process.env.MONGO_PASSWORD,
 			dbName: `chatbot`,
 			useNewUrlParser: true,
 		}, error => {
@@ -28,8 +28,9 @@ module.exports = () => {
 
 	mongoose.connection.on(`disconnected`, () => {
 		console.error(`몽고DB 연결 끊김. 재시도`)
-		connect()
+		// connect()
 	})
 
 	require(`./hanyangfood.js`)
+	require(`./history.js`)
 }

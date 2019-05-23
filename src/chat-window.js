@@ -1,5 +1,4 @@
 import {html, render} from '../node_modules/lit-html/lit-html.js'
-import { querySelectorAllDeep, querySelectorDeep } from '../node_modules/query-selector-shadow-dom/src/querySelectorDeep.js'
 import './components/chat-window-header.js'
 import './components/chat-window-body.js'
 import './components/chat-window-footer.js'
@@ -15,15 +14,7 @@ class ChatWindow extends HTMLElement {
 	connectedCallback() {
 		this.scrollToLast()
 	}
-
-	querySelectorAllDeep(element) {		
-		console.log(querySelectorAllDeep(element))
-	}
-
-	querySelectorDeep(element) {
-		console.log(querySelectorDeep(element))
-	}
-
+	
 	scrollToLast() {
 		const chatBody = this.shadowRoot.querySelector(`chat-window-body`)
 

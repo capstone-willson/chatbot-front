@@ -8,8 +8,8 @@ const helmet = require(`helmet`)
 const compression = require('compression')
 
 const indexRouter = require(`./routes/index`)
-
-
+const passwordRouter = require(`./routes/password.js`)
+const findHistoryRouter = require(`./routes/find-history.js`)
 
 // 몽구스, 노드-스케줄러 실행
 const connect = require(`./mongodb/mongoose.js`)
@@ -45,6 +45,8 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, `public`)))
 
 app.use(`/`, indexRouter)
+app.use(`/password`, passwordRouter)
+app.use(`/history`, findHistoryRouter)
 app.use(`/options`, indexRouter)
 app.use(`/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 

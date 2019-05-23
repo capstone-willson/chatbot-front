@@ -278,5 +278,6 @@ module.exports = {
 		"naver": true,
 		"Chart": true,
 		"querySelectorShadowDom": true,
+		"io": true,
     }
 };

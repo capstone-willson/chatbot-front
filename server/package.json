@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@webcomponents/webcomponentsjs": "^2.2.10",
+    "axios": "^0.18.0",
     "compression": "^1.7.4",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.5",
@@ -15,6 +16,7 @@
     "debug": "~2.6.9",
     "ejs": "^2.6.1",
     "express": "~4.16.0",
+    "express-session": "^1.16.1",
     "forever": "^1.0.0",
     "fs": "0.0.1-security",
     "helmet": "^3.17.0",
@@ -29,7 +31,9 @@
     "vhost": "^3.0.2"
   },
   "devDependencies": {
+    "socket.io": "^2.2.0",
     "swagger-jsdoc": "^3.2.9",
-    "swagger-ui-express": "^4.0.2"
+    "swagger-ui-express": "^4.0.2",
+    "ws": "^7.0.0"
   }
 }

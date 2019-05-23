@@ -28,7 +28,13 @@ class ModalVisualVector extends HTMLElement {
 		this.style.display = `none`		
 	}
 
-	loadXHR(text = `안녕`) {
+	onKeyDownEnter(event) {
+		if (event.keyCode === 13) {
+			this.reloadXHR(this.shadowRoot.querySelector(`.query`).value)			
+		}				
+	}
+
+	loadXHR(text = ``) {
 		const xhr = new XMLHttpRequest()
 		const formData = new FormData()
 		formData.append(`chat`, text)
@@ -37,61 +43,140 @@ class ModalVisualVector extends HTMLElement {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`POST`, `http://34.80.42.161:8000/v1/analysis/visualize/similarity`)
+		xhr.open(`POST`, `http://34.80.42.161:8000/v1/analysis/visualize/similarity/questions`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
-				if (xhr.status === 200 || xhr.status === 201) {		
-					console.log(JSON.parse(xhr.responseText))
+				if (xhr.status === 200 || xhr.status === 201) {
+					console.info(JSON.parse(xhr.responseText))
 					this.draw(JSON.parse(xhr.responseText))
 				}
+				
+			}			
+		})
+		xhr.send(formData)
+	}
+
+	reloadXHR(text = ``) {
+		const xhr = new XMLHttpRequest()
+		const formData = new FormData()
+		formData.append(`chat`, text)
+
+		if(!xhr) {
+			throw new Error(`XHR 호출 불가`)			
+		}
+
+		xhr.open(`POST`, `http://34.80.42.161:8000/v1/analysis/visualize/similarity/questions`)
+		xhr.addEventListener(`readystatechange`, () => {
+			if (xhr.readyState === xhr.DONE) {
+				if (xhr.status === 200 || xhr.status === 201) {
+					const json = JSON.parse(xhr.responseText)
+					const image = new Image(15, 15)
+					image.src = `/images/star.svg`
+					console.info(`json`, json)
+					this.scatterChart.config = {
+						type: `scatter`,
+						data: {
+							datasets: [{
+								label: `현재 단어`,
+								backgroundColor: `red`,
+								pointStyle: image,
+								pointBorderColor: `red`,
+								pointRadius: 15,
+								data: json[`input`],
+							},
+							{
+								label: `셔틀버스`,
+								backgroundColor: `#a5dff9`,
+								data: json[`shuttle_bus`],
+							},
+							{
+								label: `식단`,
+								backgroundColor: `orange`,
+								data: json[`food`],
+							},
+							{
+								label: `일상대화`,
+								backgroundColor: `#9055A2`,
+								data: json[`talk`],
+							},
+							{
+								label: `학교정보`,
+								backgroundColor: `#60c5ba`,
+								data: json[`prepared`],
+							},
+							{
+								label: `도서관`,
+								backgroundColor: `#feee7d`,
+								data: json[`book`],
+							}],
+						},
+						options: {
+							tooltips: {
+								callbacks: {
+									label: (tooltipItem, data) => {
+										const _data = data
+										return _data.datasets[tooltipItem.datasetIndex][`data`][tooltipItem.index][`text`]
+									},
+								},
+							},
+							scales: {
+								xAxes: [{
+									type: `linear`,
+									position: `bottom`,
+								}],
+							},
+						},
+					}
+					this.scatterChart.update()
+				}
+				
 			}			
 		})
 		xhr.send(formData)
 	}
 
 	draw(json) {
-		const ctx = this.shadowRoot.getElementById(`myChart`).getContext(`2d`)
-		new Chart(ctx, {
+		const ctx = this.shadowRoot.getElementById(`myChart`).getContext(`2d`)		
+		this.scatterChart = new Chart(ctx, {
 			type: `scatter`,
 			data: {
 				datasets: [{
-					label: `shuttle_bus`,
-					backgroundColor: `red`,
+					label: `셔틀버스`,
+					backgroundColor: `#a5dff9`,
 					data: json[`shuttle_bus`],
 				},
 				{
-					label: `food`,
+					label: `식단`,
 					backgroundColor: `orange`,
 					data: json[`food`],
 				},
 				{
-					label: `talk`,
-					backgroundColor: `yellow`,
+					label: `일상대화`,
+					backgroundColor: `#9055A2`,
 					data: json[`talk`],
 				},
 				{
-					label: `prepared`,
-					backgroundColor: `green`,
+					label: `학교정보`,
+					backgroundColor: `#60c5ba`,
 					data: json[`prepared`],
 				},
 				{
-					label: `book`,
-					backgroundColor: `skyblue`,
+					label: `도서관`,
+					backgroundColor: `#feee7d`,
 					data: json[`book`],
 				},
-				],
+				{
+					label: `현재 단어`,
+					backgroundColor: `red`,
+					data: json[`input`],
+				}],
 			},
 			options: {
 				tooltips: {
 					callbacks: {
 						label: (tooltipItem, data) => {
-							let label = data.datasets[tooltipItem.datasetIndex].label || ``
-		
-							if (label) {
-								label += `: `
-							}
-							label += Math.round(tooltipItem.yLabel * 100) / 100
-							return label
+							const _data = data
+							return _data.datasets[tooltipItem.datasetIndex][`data`][tooltipItem.index][`text`]
 						},
 					},
 				},
@@ -103,12 +188,6 @@ class ModalVisualVector extends HTMLElement {
 				},
 			},
 		})
-	}
-
-	onKeyDownEnter(event) {
-		if (event.keyCode === 13) {
-			this.loadXHR(this.shadowRoot.querySelector(`.query`).value)
-		}				
 	}
 
 	render() {
@@ -195,6 +274,7 @@ const style = html`
 	}
 
 	.query {
+		top: 60px;
 		left: 10px;
 		width: calc(100% - 35px);
 		height: 30px;
