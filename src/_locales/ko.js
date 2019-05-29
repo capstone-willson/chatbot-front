@@ -46,7 +46,7 @@ export default {
 
 	PROCESS_DATA_FOOD: `식단`,
 	PROCESS_DATA_BUS: `셔틀버스`,
-	PROCESS_DATA_QUERY: `사용자 질문`,
+	PROCESS_DATA_QUERY: `유저 질문`,
 	PROCESS_DATA_QUESTION: `사전 질문`,
 
 	PROCESS_ANALYSIS_SIMILAR: `질문 유사도`,
@@ -56,6 +56,16 @@ export default {
 	PROCESS_VISUAL_INTER_TITLE: `질문 유사도 분석 시각화`,
 	PROCESS_VISUAL_INTER_QUERY: `사용자 입력 질문`,	
 
-	PROCESS_VISUAL_VECTOR: `벡터 유사도`,
+	PROCESS_VISUAL_VECTOR: `벡터 유사도\r\n(사전 질문)`,
 	PROCESS_VISUAL_VECTOR_TITLE: `질문간 벡터 유사도 비교`,
+	
+	PROCESS_VISUAL_VECTOR_QUERY: `벡터 유사도\r\n(유저 질문)`,
+	PROCESS_VISUAL_VECTOR_TITLE: `질문간 벡터 유사도 비교`,
+
+	PROCESS_VISUAL_KEYWORDS: `키워드 비율`,
+	PROCESS_VISUAL_KEYWORDS_NUMBER: `키워드 검색 개수`,
+	PROCESS_VISUAL_KEYWORDS_TITLE: `유저 질문 키워드 비율(%)`,
+
+	PROCESS_VISUAL_CATEGORY: `카테고리\r\n비율`,
+	PROCESS_VISUAL_CATEGORY_TITLE: `카테고리 비율(%)`,	
 }
