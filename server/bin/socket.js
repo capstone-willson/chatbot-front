@@ -1,7 +1,7 @@
 const SocketIO = require(`socket.io`)
 const history = require(`../mongodb/history.js`)
 
-module.exports = (server, app, sessionMiddleware) => {
+module.exports = (server, app, sessionMiddleware) => {	
 	const io = SocketIO(server, {path:`/socket.io`})	
 	
 	app.set(`io`, io)
@@ -11,15 +11,19 @@ module.exports = (server, app, sessionMiddleware) => {
 	})
 
     io.on(`connection`, socket => {
-		const req = socket.request		
-		const ip = req.headers[`x-forwarded-for`] || req.connection.remoteAddress
-		socket.join(ip)
+		const req = socket.request
+		// const ip = req.headers[`x-forwarded-for`] || req.connection.remoteAddress
+		let ip = req.headers['x-forwarded-for'] ||
+			req.connection.remoteAddress ||
+			req.socket.remoteAddress ||
+			req.connection.socket.remoteAddress
+		socket.join(socket.id)
         console.info(`새 클라이언트 접속`, ip, socket.id, req.id)
         
         socket.on(`disconnect`, () => {
             // socket.id = 사용자 고유ID, 사용자 구별
 			console.info(`클라이언트 접속해제`, ip, socket.id)
-			socket.leave(ip)
+			socket.leave(socket.id)
         })
         
         socket.on(`error`, error => {
@@ -28,9 +32,9 @@ module.exports = (server, app, sessionMiddleware) => {
         
         // 사용자 커스텀 이벤트
         socket.on(`reply`, data => {
-			socket.to(ip).emit(`botSay`, data)
+			socket.to(socket.id).emit(`botSay`, data)
 			const _history = new history({
-				ip,
+				ip: socket.id,
 				user: `bot`,
 				date: Date.now(),
 				chat: data,
@@ -44,10 +48,10 @@ module.exports = (server, app, sessionMiddleware) => {
 		})
 		
 		socket.on(`question`, data => {
-			socket.to(ip).emit(`userSay`, data)
+			socket.to(socket.id).emit(`userSay`, data)
 
 			const _history = new history({
-				ip,
+				ip: socket.id,
 				user: `user`,
 				date: Date.now(),
 				chat: data,
@@ -73,7 +77,7 @@ module.exports = (server, app, sessionMiddleware) => {
 		})
 
 		socket.on(`changeIp`, data => {
-			socket.leave(ip)
+			socket.leave(socket.id)
 			socket.join(data)
 		})
     })

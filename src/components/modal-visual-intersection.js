@@ -9,12 +9,16 @@ class ModalVisualIntersection extends HTMLElement {
 
 		this.eventClickBack = this.onClickBack.bind(this)
 		this.eventKeyDownEnter = this.onKeyDownEnter.bind(this)
+		this.eventClickQuestion = this.onClickQuestion.bind(this)
 	}
 
 	connectedCallback() {
 		this.addEventListener(`click`, this.eventClickBack, false)
 		this.shadowRoot.addEventListener(`click`, event => event.stopPropagation(), false)
 		this.shadowRoot.querySelector(`.query`).addEventListener(`keydown`, this.eventKeyDownEnter, false)
+		this.shadowRoot.querySelectorAll(`.question`).forEach(each => {
+			each.addEventListener(`click`, this.eventClickQuestion, false)
+		})
 
 		this.drawVenn()		
 	}
@@ -22,10 +26,26 @@ class ModalVisualIntersection extends HTMLElement {
 	disconnectedCallback() {
 		this.removeEventListener(`click`, this.eventClickBack, false)
 		this.shadowRoot.querySelector(`.query`).removeEventListener(`keydown`, this.eventKeyDownEnter, false)
+		this.shadowRoot.querySelectorAll(`.question`).forEach(each => {
+			each.removeEventListener(`click`, this.eventClickQuestion, false)
+		})
 	}
 
 	onClickBack() {
 		this.style.display = `none`
+	}
+
+	onClickQuestion(event) {
+		const target = event.target
+		this.shadowRoot.querySelectorAll(`.question`).forEach(each => {
+			each.classList.remove(`active`)
+		})
+
+		this.modifyContent(this.json)
+			.writeScore(target.placeholder.replace(`th`, ``))
+			.writeSentence(target.placeholder.replace(`th`, ``))
+			.writeVenn(target.placeholder.replace(`th`, ``))
+			.writeTable(target.placeholder.replace(`th`, ``))
 	}
 
 	onKeyDownEnter(event) {
@@ -50,18 +70,17 @@ class ModalVisualIntersection extends HTMLElement {
 
 	loadXHR(text) {
 		const xhr = new XMLHttpRequest()
-		const formData = new FormData()
-		formData.append(`chat`, text)
 
 		if(!xhr) {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`POST`, `http://34.80.42.161:8000/v1/analysis/similarity/morphs`)
+		xhr.open(`GET`, `http://34.80.42.161:8000/v2/visualization/diagram/tag/ngram/${text}`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {		
 					console.info(JSON.parse(xhr.responseText))
+					this.json = JSON.parse(xhr.responseText)
 					this.modifyContent(JSON.parse(xhr.responseText))
 						.writeScore()
 						.writeSentence()
@@ -70,7 +89,7 @@ class ModalVisualIntersection extends HTMLElement {
 				}
 			}			
 		})
-		xhr.send(formData)
+		xhr.send()
 	}
 
 	modifyContent(json) {
@@ -231,7 +250,7 @@ const style = html`
 	#question {
 		top: 0;
 		left: 0;
-		z-index: 10;
+		z-index: 10;		
 	}
 
 	#intersect {
@@ -268,7 +287,6 @@ const style = html`
 		height: 30px;
 		position: absolute;
 		border-radius: 2px;
-		border: 1px solid gray;
 		padding-left: 15px;
 	}
 	
@@ -285,12 +303,16 @@ const style = html`
 	}
 
 	.query {
-		background-color: #C7DDEC;
+		border: 1px solid #3796d7;
 		top: 60px;
 	}
 
+	.question {
+		border: 1px solid gray;
+	}
+
 	.question.active {
-		background-color: bisque;
+		border: 2px solid bisque;
 	}
 
 	.question-1 {
@@ -319,7 +341,6 @@ const style = html`
 	}
 
 	g.venn-area path::after {
-		content: 'AA';
 		position: absolute;
 		border-style: solid;
 		border-width: 10px 10px 10px 0;
@@ -329,11 +350,7 @@ const style = html`
 		z-index: 1;
 		left: -10px;
 		top: 40px;
-	}
-
-	g.venn-area path:hover::after {
-		
-	}
+	}	
 
 	table {
 		border-collapse: collapse;
@@ -359,6 +376,7 @@ const style = html`
 	table td, table th {
 		border: 1px solid #ddd;
 		padding: 8px;
+		font-size: 12px;
 	}
 
 	table tr:nth-child(even){

@@ -3,6 +3,8 @@ import './bot-chat-balloon.js'
 import './my-chat-balloon.js'
 import './book-list.js'
 import './bus-info.js' 
+import '@vaadin/vaadin-tabs/vaadin-tabs.js'
+import '@vaadin/vaadin-list-box/vaadin-list-box.js'
 
 class ChatWindowBody extends HTMLElement {
 	constructor() {
@@ -10,9 +12,6 @@ class ChatWindowBody extends HTMLElement {
 
 		this.attachShadow({ mode: `open` })
 		render(this.render(), this.shadowRoot)		
-
-		this.bot = new RiveScript({utf8: true})
-		this.bot.loadFile(`/assets/hy-lion.rive`).then(this.loading_done.bind(this)).catch(this.loading_error)
 	}
 
 	connectedCallback() {
@@ -59,12 +58,12 @@ class ChatWindowBody extends HTMLElement {
 		throw new Error(`Error when loading files: ${error}`)
 	}
 
-	reply(text) {
-		this.replyFront(text)
+	reply(text, config = {backgroundColor: `white`}) {
+		this.replyFront(text, config)
 		this.socket.emit(`reply`, text)	
 	}
 
-	replyFront(text) {
+	replyFront(text, config) {
 		const main = this.shadowRoot.querySelector(`main`)
 		const ONE = 1, LAST_CHILD_NUM = main.children.length - ONE
 		const lastChat = main.children[LAST_CHILD_NUM]
@@ -74,11 +73,11 @@ class ChatWindowBody extends HTMLElement {
 		if(isBot == false) {
 			const botChatBalloon = document.createElement(`bot-chat-balloon`)
 			main.appendChild(botChatBalloon)
-			botChatBalloon.chat(text)
+			botChatBalloon.chat(text, config)
 			document.querySelector(`chat-window`).scrollToLast()
 			return
 		}
-		lastChat.chat(text)
+		lastChat.chat(text, config)
 		document.querySelector(`chat-window`).scrollToLast()
 	}
 
@@ -174,7 +173,7 @@ const style = html`
 	bot-chat-balloon, my-chat-balloon {
 		width: 100%;
 		min-height: min-content;
-	}
+	}	
 </style>
 `
 

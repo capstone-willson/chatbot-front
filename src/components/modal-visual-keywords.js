@@ -1,6 +1,6 @@
 import {html, render} from '../../node_modules/lit-html/lit-html.js'
 
-class ModalVisualVector extends HTMLElement {
+class ModalVisualKeywords extends HTMLElement {
 	constructor() {
 		super()
 
@@ -34,161 +34,84 @@ class ModalVisualVector extends HTMLElement {
 		}				
 	}
 
-	loadXHR(text = ``) {
+	loadXHR(text = 10) {
 		const xhr = new XMLHttpRequest()
-		const formData = new FormData()
-		formData.append(`chat`, text)
 
 		if(!xhr) {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`POST`, `http://34.80.42.161:8000/v1/analysis/visualize/similarity/questions`)
+		xhr.open(`GET`, `http://hanyang-chatbot.kro.kr:8000/v2/visualization/bar/keyword/answer/${text}`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
 					console.info(JSON.parse(xhr.responseText))
 					this.draw(JSON.parse(xhr.responseText))
 				}
-				
+
 			}			
 		})
-		xhr.send(formData)
+		xhr.send()
 	}
 
-	reloadXHR(text = ``) {
+	reloadXHR(text = 10) {
 		const xhr = new XMLHttpRequest()
-		const formData = new FormData()
-		formData.append(`chat`, text)
-
-		this.shadowRoot.querySelector(`.lds-roller`).style.display = `block`
 
 		if(!xhr) {
 			throw new Error(`XHR 호출 불가`)			
 		}
-
-		xhr.open(`POST`, `http://34.80.42.161:8000/v1/analysis/visualize/similarity/questions`)
+		this.shadowRoot.querySelector(`.lds-roller`).style.display = `block`
+		xhr.open(`GET`, `http://hanyang-chatbot.kro.kr:8000/v2/visualization/bar/keyword/answer/${text}`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
-					const json = JSON.parse(xhr.responseText)
-					const image = new Image(15, 15)
-					image.src = `/images/star.svg`
-					console.info(`json`, json)
-					this.scatterChart.config = {
-						type: `scatter`,
+					const json = JSON.parse(xhr.responseText)					
+					this.chart.config = {
+						type: `horizontalBar`,
 						data: {
 							datasets: [{
-								label: `현재 단어`,
-								backgroundColor: `red`,
-								pointStyle: image,
-								pointBorderColor: `red`,
-								pointRadius: 15,
-								data: json[`input`],
-							},
-							{
-								label: `셔틀버스`,
-								backgroundColor: `#a5dff9`,
-								data: json[`shuttle_bus`],
-							},
-							{
-								label: `식단`,
-								backgroundColor: `orange`,
-								data: json[`food`],
-							},
-							{
-								label: `일상대화`,
-								backgroundColor: `#9055A2`,
-								data: json[`talk`],
-							},
-							{
-								label: `학교정보`,
-								backgroundColor: `#60c5ba`,
-								data: json[`prepared`],
-							},
-							{
-								label: `도서관`,
-								backgroundColor: `#feee7d`,
-								data: json[`book`],
+								data: Object.entries(json).map(el => el[1]),
+								backgroundColor: new Array(10).fill().map(() => `rgb(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`),
 							}],
+							labels: Object.entries(json).map(el => el[0]),
 						},
 						options: {
-							tooltips: {
-								callbacks: {
-									label: (tooltipItem, data) => {
-										const _data = data
-										return _data.datasets[tooltipItem.datasetIndex][`data`][tooltipItem.index][`text`]
-									},
-								},
+							legend: {
+								display: false,
+								fullWidth: true,
 							},
-							scales: {
-								xAxes: [{
-									type: `linear`,
-									position: `bottom`,
-								}],
-							},
+							showAllTooltips: true,
 						},
 					}
-					this.scatterChart.update()
+					this.chart.update()
 					this.shadowRoot.querySelector(`.lds-roller`).style.display = `none`
 				}
-				
+
 			}			
 		})
-		xhr.send(formData)
+		xhr.send()
 	}
 
 	draw(json) {
 		const ctx = this.shadowRoot.getElementById(`myChart`).getContext(`2d`)		
-		this.scatterChart = new Chart(ctx, {
-			type: `scatter`,
+		this.chart = new Chart(ctx, {
+			type: `horizontalBar`,
 			data: {
 				datasets: [{
-					label: `셔틀버스`,
-					backgroundColor: `#a5dff9`,
-					data: json[`shuttle_bus`],
-				},
-				{
-					label: `식단`,
-					backgroundColor: `orange`,
-					data: json[`food`],
-				},
-				{
-					label: `일상대화`,
-					backgroundColor: `#9055A2`,
-					data: json[`talk`],
-				},
-				{
-					label: `학교정보`,
-					backgroundColor: `#60c5ba`,
-					data: json[`prepared`],
-				},
-				{
-					label: `도서관`,
-					backgroundColor: `#feee7d`,
-					data: json[`book`],
-				},
-				{
-					label: `현재 단어`,
-					backgroundColor: `red`,
-					data: json[`input`],
+					data: Object.entries(json).map(el => el[1]),
+					backgroundColor: new Array(10).fill().map(() => `rgb(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`),
 				}],
+				labels: Object.entries(json).map(el => el[0]),
 			},
 			options: {
-				tooltips: {
-					callbacks: {
-						label: (tooltipItem, data) => {
-							const _data = data
-							return _data.datasets[tooltipItem.datasetIndex][`data`][tooltipItem.index][`text`]
-						},
+				legend: {
+					display: false,
+					position: `bottom`,
+					labels: {
+						usePointStyle: true,
 					},
 				},
-				scales: {
-					xAxes: [{
-						type: `linear`,
-						position: `bottom`,
-					}],
-				},
+				showAllTooltips: true,
 			},
 		})
 		this.shadowRoot.querySelector(`.lds-roller`).style.display = `none`
@@ -197,9 +120,9 @@ class ModalVisualVector extends HTMLElement {
 	render() {
 		return html`
 			${style}			
-			<div id='modalVisualVector'>
-				<div class='title'>${i18next.t(`PROCESS_VISUAL_VECTOR_TITLE`)}</div>
-				<input class='query form-control' type='text' placeholder='${i18next.t(`PROCESS_VISUAL_INTER_QUERY`)}' />
+			<div id='modalVisualKeywords'>
+				<div class='title'>${i18next.t(`PROCESS_VISUAL_KEYWORDS_TITLE`)}</div>
+				<input class='query form-control' type='text' placeholder='${i18next.t(`PROCESS_VISUAL_KEYWORDS_NUMBER`)}' />
 				<div class='lds-roller'><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
 				<canvas id='myChart' width='400' height='700'></canvas>
 			</div>
@@ -210,11 +133,13 @@ class ModalVisualVector extends HTMLElement {
 const style = html`
 <?xml-stylesheet type='text/css'?>
 <style>
+	* {
+		user-select: none;
+	}
 	*::-webkit-scrollbar {
 		width: 0;
 		display: none;
-	}
-
+	}	
 	:host {
 		display: flex;
 		justify-content: center;
@@ -226,8 +151,7 @@ const style = html`
 		background-color: rgba(0, 0, 0, 0.4);
 		z-index: 50;
 	}
-
-	#modalVisualVector {
+	#modalVisualKeywords {
 		position: absolute;
 		width: 400px;
 		height: 90vh;
@@ -240,20 +164,17 @@ const style = html`
 		box-shadow: 0 8px 6px -6px black;
 		overflow-x: scroll;
 	}
-
 	@keyframes up {
 		0% {
 			width: 0;
 			height: 0;
 		}
-
 		100% {
 			width: 400px;
 			height: 90vh;
 		}
 	}
-
-	#modalVisualIntersection > .wrap {
+	#modalVisualKeywords > .wrap {
 		position: relative;
 	}
 	
@@ -269,26 +190,23 @@ const style = html`
 		color: white;
 		font-size: 18px;
 	}
-
 	#myChart {
 		position: absolute;
-		height: 700px;
 		top: 100px;
 		left: 0;
-		width: 100%;
+		width: 400px;
+		height: 700px;
 	}
-
 	.query {
-		top: 60px;
+		top: 55px;
 		left: 10px;
 		width: calc(100% - 35px);
 		height: 30px;
 		position: absolute;
 		border-radius: 2px;
 		border: 1px solid gray;
-		padding-left: 15px;
+		padding-left: 15px;		
 	}
-
 	.lds-roller {
 		display: block;
 		position: relative;
@@ -379,4 +297,4 @@ const style = html`
 </style>
 `
 
-customElements.define(`modal-visual-vector`, ModalVisualVector)
+customElements.define(`modal-visual-keywords`, ModalVisualKeywords)

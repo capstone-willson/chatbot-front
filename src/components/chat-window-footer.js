@@ -15,6 +15,7 @@ class ChatWindowFooter extends HTMLElement {
 		this.canTyping = true
 		this.canUserChat = true
 		this.canRemoteChat = false
+		this.isLibraryMode = false
 	}
 
 	connectedCallback() {
@@ -30,14 +31,21 @@ class ChatWindowFooter extends HTMLElement {
 	onkeydownTextarea(event) {
 		const isEnter = event.code === `Enter`
 
-		if(isEnter) {
+		if (event.target.value.trim() === ``) {			
+			return
+		}
+
+		if (isEnter) {
 			event.preventDefault()
 			this.sendAndReply()
 		}
 	}
 
-	onClickSendButton() {		
-		this.sendAndReply()
+	onClickSendButton() {
+		if (this.shadowRoot.querySelector(`.send_text`).value.trim() === ``) {
+			return
+		}
+		this.sendAndReply()		
 	}
 
 	sendAndReply() {
@@ -90,7 +98,7 @@ class ChatWindowFooter extends HTMLElement {
 		// searchFoodMenu.openHanyangSite()
 		// this.replyByPingpongAPI(sendText.value)
 		// document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`).reply(`<bus-info question='${sendText.value}'></bus-info>`)
-		sendText.value = ``		
+		sendText.value = ``
 	}
 
 	replyChat(text) {
@@ -109,44 +117,89 @@ class ChatWindowFooter extends HTMLElement {
 				if (xhr.status === 200 || xhr.status === 201) {	
 					// JSON.parse(xhr.responseText)[`answer`][`mode`]
 					console.info(JSON.parse(xhr.responseText)) 
-					if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `talk`) {						
-						// this.replyByPingpongAPI(text)
-						this.chatAboutTalk(text)
-					} else if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `book`) {
-						searchLibrary.replyAboutLibrary(text)
-					} else if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `shuttle_bus`) {
-						document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`).reply(`<bus-info question='${text}'></bus-info>`)
-					} else if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `prepared`) {
-						this.chatAboutTalk(text)
-					} else {
-						chatBody.reply(`민혁이가 이상하다냥`)
+					if (this.isLibraryMode === false) {
+						if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `talk`) {
+							// this.replyByPingpongAPI(text)
+							chatBody.reply(JSON.parse(xhr.responseText)[`answer`][`answer`])
+						} else if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `book`) {
+							searchLibrary.replyAboutLibrary(text)
+						} else if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `shuttle_bus`) {
+							document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`).reply(`<bus-info question='${text}'></bus-info>`)
+						} else if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `prepared`) {
+							chatBody.reply(JSON.parse(xhr.responseText)[`answer`][`answer`])
+						} else if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `search`) {
+							this.chatAboutSearch(JSON.parse(xhr.responseText), text)
+						} else if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `food`) {							
+							this.getFoodList()
+						} else if (JSON.parse(xhr.responseText)[`answer`] && JSON.parse(xhr.responseText)[`answer`][`mode`] === `unknown`) {							
+							chatBody.reply(JSON.parse(xhr.responseText)[`answer`][`answer`])
+						} else {
+							chatBody.reply(`무슨 말인지 모르겠다냥~ 다시 해달라냥`)
+						}
 					}
+				} else {
+					chatBody.reply(`서버 점검 중이다냥~`)
 				}
 			}			
 		})
 		xhr.send(formData)
 	}
 
-	chatAboutTalk(text) {		
+	getFoodList() {
 		const chatBody = document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`)
-		const xhr = new XMLHttpRequest()
-		const formData = new FormData()
-		formData.append(`chat`, text)
+		const xhr = new XMLHttpRequest()		
 
 		if(!xhr) {
-			throw new Error(`XHR 호출 불가`)			
-		}
-
-		xhr.open(`POST`, `http://34.80.42.161:8000/v1/chat`)
+			throw new Error(`XHR 호출 불가`)
+		}		
+		xhr.open(`GET`, `http://34.80.42.161:8080/hanyangfood/`)			
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
-				if (xhr.status === 200 || xhr.status === 201) {		
-					console.info(JSON.parse(xhr.responseText))
-					chatBody.reply(JSON.parse(xhr.responseText)[`answer`][`answer`])
+				if (xhr.status === 200 || xhr.status === 201) {
+					chatBody.reply(`
+					<vaadin-tabs>
+						<vaadin-tab>교직원</vaadin-tab>
+						<vaadin-tab>학생식당</vaadin-tab>
+						<vaadin-tab>기숙사</vaadin-tab>
+						<vaadin-tab>푸드코트</vaadin-tab>
+						<vaadin-tab>창업보육센터</vaadin-tab>
+					</vaadin-tabs>
+					<vaadin-list-box>
+						${JSON.parse(xhr.responseText)[0][`foodList`][0] ? JSON.parse(xhr.responseText)[0][`foodList`][0].map(each => `<vaadin-item disabled>아침 ${each}</vaadin-item>`): ``}
+						<hr>
+						${JSON.parse(xhr.responseText)[0][`foodList`][1] ? JSON.parse(xhr.responseText)[0][`foodList`][1].map(each => `<vaadin-item disabled>점심 ${each}</vaadin-item>`): ``}
+						<hr>
+						${JSON.parse(xhr.responseText)[0][`foodList`][2] ? JSON.parse(xhr.responseText)[0][`foodList`][2].map(each => `<vaadin-item disabled>저녁 ${each}</vaadin-item>`): ``}
+					</vaadin-list-box>`)
 				}
 			}
+		})		
+		xhr.send()		
+	}
+
+	chatAboutSearch(json, text) {
+		const chatBody = querySelectorShadowDom.querySelectorDeep(`chat-window-body`)
+		chatBody.reply(`${json[`answer`][`answer`]}이다냥~`)
+		chatBody.reply(`
+		<blockquote class='block-1 active' data-text='${text}' data-subject='${json[`answer`][`output`][`context_subject-1`]}'>
+			${json[`answer`][`output`][`context-1`].split(json[`answer`][`answer`]).join(`<string style='color: blue'>${json[`answer`][`answer`]}</string>`)}
+		</blockquote>		
+		`)
+		chatBody.reply(`
+		<blockquote class='block-2' data-text='${text}' data-subject='${json[`answer`][`output`][`context_subject-2`]}'>
+			${json[`answer`][`output`][`context-2`].split(json[`answer`][`answer`]).join(`<string style='color: blue'>${json[`answer`][`answer`]}</string>`)}
+		</blockquote>
+		`, {
+			backgroundColor: `lightgray`,
 		})
-		xhr.send(formData)		
+		chatBody.reply(`
+		<blockquote class='block-3' data-text='${text}' data-subject='${json[`answer`][`output`][`context_subject-3`]}'>
+			${json[`answer`][`output`][`context-3`].split(json[`answer`][`answer`]).join(`<string style='color: blue'>${json[`answer`][`answer`]}</string>`)}
+		</blockquote>
+		`, {
+			backgroundColor: `lightgray`,
+		})		
+		console.info(json)
 	}
 
 	chatQuestionAnalysis(text) {
@@ -195,8 +248,8 @@ class ChatWindowFooter extends HTMLElement {
 					{sets: [`입력값`,`유사값`], size: sizeIn}]
 				
 				const chart = venn.VennDiagram()
-					.width(380)
-					.height(250)
+					.width(300)
+					.height(200)
 
 				const botChat = chatBody.shadowRoot.querySelectorAll(`bot-chat-balloon`)
 				d3.select(botChat[botChat.length - 1].shadowRoot.querySelector(`#venn`))
@@ -207,11 +260,11 @@ class ChatWindowFooter extends HTMLElement {
 			},
 			writeText() {
 				chatBody.reply(`
-					<form action='http://34.80.42.161:8000/v1/db/questions/add' method='post' target='ifra'>
-						등록질문: <input id='text' name='text' type='text' /><br/>
-						등록답변: <input id='answer' name='answer' type='text' /><br/>
-						등록카테고리: <input id='category' name='category' type='text' />
-						<input id='' type='submit' value='전송' />
+					<form class='input-form' action='http://34.80.42.161:8000/v1/db/questions/add' method='post' target='ifra'>
+						<label class='label-text' for='text'>등록질문:</label> <input id='text' name='text' type='text' />
+						<label class='label-answer' for='answer'>등록답변:</label> <input id='answer' name='answer' type='text' />
+						<label class='label-category' for='category'>등록카테고리:</label> <input id='category' name='category' type='text' />
+						<input id='btnSubmit' type='submit' value='전송' />
 					</form>
 					<iframe name='ifra'></iframe>
 				`)
@@ -397,7 +450,7 @@ const style = html`
 
 	.send_button:hover {
 		color: black;
-	}	
+	}		
 </style>
 `
 

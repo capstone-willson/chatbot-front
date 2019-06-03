@@ -111,6 +111,10 @@ const style = html`
 		background: #EDEEFE;
 		z-index: -1;
 	}	
+
+	::selection {
+		background-color: yellow;
+	}
 </style>
 `
 

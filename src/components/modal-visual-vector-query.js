@@ -1,6 +1,6 @@
 import {html, render} from '../../node_modules/lit-html/lit-html.js'
 
-class ModalVisualVector extends HTMLElement {
+class ModalVisualVectorQuery extends HTMLElement {
 	constructor() {
 		super()
 
@@ -43,14 +43,14 @@ class ModalVisualVector extends HTMLElement {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`POST`, `http://34.80.42.161:8000/v1/analysis/visualize/similarity/questions`)
+		xhr.open(`POST`, `http://34.80.42.161:8000/v1/analysis/visualize/similarity/queries`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
 					console.info(JSON.parse(xhr.responseText))
 					this.draw(JSON.parse(xhr.responseText))
 				}
-				
+
 			}			
 		})
 		xhr.send(formData)
@@ -60,14 +60,13 @@ class ModalVisualVector extends HTMLElement {
 		const xhr = new XMLHttpRequest()
 		const formData = new FormData()
 		formData.append(`chat`, text)
-
 		this.shadowRoot.querySelector(`.lds-roller`).style.display = `block`
 
 		if(!xhr) {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`POST`, `http://34.80.42.161:8000/v1/analysis/visualize/similarity/questions`)
+		xhr.open(`POST`, `http://34.80.42.161:8000/v1/analysis/visualize/similarity/queries`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
@@ -132,7 +131,7 @@ class ModalVisualVector extends HTMLElement {
 					this.scatterChart.update()
 					this.shadowRoot.querySelector(`.lds-roller`).style.display = `none`
 				}
-				
+
 			}			
 		})
 		xhr.send(formData)
@@ -214,7 +213,6 @@ const style = html`
 		width: 0;
 		display: none;
 	}
-
 	:host {
 		display: flex;
 		justify-content: center;
@@ -226,7 +224,6 @@ const style = html`
 		background-color: rgba(0, 0, 0, 0.4);
 		z-index: 50;
 	}
-
 	#modalVisualVector {
 		position: absolute;
 		width: 400px;
@@ -240,19 +237,16 @@ const style = html`
 		box-shadow: 0 8px 6px -6px black;
 		overflow-x: scroll;
 	}
-
 	@keyframes up {
 		0% {
 			width: 0;
 			height: 0;
 		}
-
 		100% {
 			width: 400px;
 			height: 90vh;
 		}
 	}
-
 	#modalVisualIntersection > .wrap {
 		position: relative;
 	}
@@ -269,7 +263,6 @@ const style = html`
 		color: white;
 		font-size: 18px;
 	}
-
 	#myChart {
 		position: absolute;
 		height: 700px;
@@ -277,7 +270,6 @@ const style = html`
 		left: 0;
 		width: 100%;
 	}
-
 	.query {
 		top: 60px;
 		left: 10px;
@@ -286,9 +278,8 @@ const style = html`
 		position: absolute;
 		border-radius: 2px;
 		border: 1px solid gray;
-		padding-left: 15px;
+		padding-left: 15px;		
 	}
-
 	.lds-roller {
 		display: block;
 		position: relative;
@@ -379,4 +370,4 @@ const style = html`
 </style>
 `
 
-customElements.define(`modal-visual-vector`, ModalVisualVector)
+customElements.define(`modal-visual-vector-query`, ModalVisualVectorQuery)

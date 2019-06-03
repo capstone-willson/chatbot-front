@@ -4,10 +4,10 @@ const Hanyangfood = require(`../mongodb/hanyangfood.js`)
 
 module.exports = () => {	
 	// 11: 교직원, 12: 학식, 13: 기식, 14: 푸드코트, 15: 창보
-	// for(let i = 11; i < 16; i++) {
-	// 	crawl(i)
-	// }	
-	schedule.scheduleJob(`00 11 01 * * *`, () => {
+	for(let i = 11; i < 16; i++) {
+		crawl(i)
+	}	
+	schedule.scheduleJob(`00 14 * * *`, () => {
 		for(let i = 11; i < 16; i++) {
 			crawl(i) 
 		}
@@ -42,11 +42,10 @@ async function crawl(place) {
 			if (breakfast !== undefined) {
 				breakfast = breakfast.parentNode.querySelectorAll(`h3`)
 			
+				result[0] = []
 				for(const menu of breakfast) {
-					result.push({breakfast: menu.textContent.trim()})
+					result[0].push(menu.textContent.trim())
 				}
-			} else {
-				result.push({breakfast: null})
 			}
 		}
 
@@ -56,11 +55,10 @@ async function crawl(place) {
 			if (lunch !== undefined) {
 				lunch = lunch.parentNode.querySelectorAll(`h3`)
 			
+				result[1] = []
 				for(const menu of lunch) {
-					result.push({lunch: menu.textContent.trim()})
+					result[1].push(menu.textContent.trim())
 				}
-			} else {
-				result.push({lunch: null})
 			}
 		}
 
@@ -70,11 +68,10 @@ async function crawl(place) {
 			if (dinner !== undefined) {
 				dinner = dinner.parentNode.querySelectorAll(`h3`)
 			
+				result[2] = []
 				for(const menu of dinner) { 
-					result.push({dinner: menu.textContent.trim()})
+					result[2].push(menu.textContent.trim())
 				}
-			} else {
-				result.push({dinner: null})
 			}
 		}		
 	})

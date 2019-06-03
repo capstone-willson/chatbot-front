@@ -6,7 +6,7 @@ export default {
 	MENU_TITLE: `메뉴`,
 
 	BOT_SETTING_TITLE: `하냥이 봇 설정`,	
-	MENU_BOT_SETTING: `봇 커스텀 설정`,
+	MENU_BOT_SETTING: `관리자 페이지 이동`,
 	MENU_CHAT_WINDOW: `채팅창으로 이동`,
 	MENU_CHECK_ANALYSIS: `문장 분석`,
 	MENU_CHECK_BOT_MODE: `문장 학습모드`,
@@ -37,9 +37,9 @@ export default {
 
 	SHUTTLE_DROM: `기숙사행`,
 
-	PROCESS_DATA_COLLECTION: `데이터 수집`,
+	PROCESS_DATA_COLLECTION: `데이터 관리`,
 	PROCESS_DATA_ANALYSIS: `데이터 분석`,
-	PROCESS_DATA_DETAIL: `상세 분석`,
+	PROCESS_DATA_DETAIL: `사전 관리`,
 	PROCESS_DATA_VISUALIZATION: `분석 시각화`,
 
 	BUS_LEFT_TIME: `도착까지 남은시간`,
@@ -48,6 +48,7 @@ export default {
 	PROCESS_DATA_BUS: `셔틀버스`,
 	PROCESS_DATA_QUERY: `유저 질문`,
 	PROCESS_DATA_QUESTION: `사전 질문`,
+	PROCESS_DATA_CONTEXT: `문단 관리`,
 
 	PROCESS_ANALYSIS_SIMILAR: `질문 유사도`,
 	PROCESS_ANALYSIS_MORPHOLOGICAL: `형태소 분석`,
@@ -60,7 +61,6 @@ export default {
 	PROCESS_VISUAL_VECTOR_TITLE: `질문간 벡터 유사도 비교`,
 	
 	PROCESS_VISUAL_VECTOR_QUERY: `벡터 유사도\r\n(유저 질문)`,
-	PROCESS_VISUAL_VECTOR_TITLE: `질문간 벡터 유사도 비교`,
 
 	PROCESS_VISUAL_KEYWORDS: `키워드 비율`,
 	PROCESS_VISUAL_KEYWORDS_NUMBER: `키워드 검색 개수`,
