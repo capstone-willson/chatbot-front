@@ -95,7 +95,7 @@ class ChatWindowMenu extends HTMLElement {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`POST`, `http://hanyang-chatbot.kro.kr/password`)
+		xhr.open(`POST`, `https://hanyang-chatbot.kro.kr/password`)
 		xhr.setRequestHeader(`Content-type`, `application/x-www-form-urlencoded`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
@@ -114,7 +114,7 @@ class ChatWindowMenu extends HTMLElement {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`POST`, `http://hanyang-chatbot.kro.kr/history`)
+		xhr.open(`POST`, `https://hanyang-chatbot.kro.kr/history`)
 		xhr.setRequestHeader(`Content-type`, `application/x-www-form-urlencoded`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {

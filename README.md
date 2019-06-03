@@ -48,7 +48,7 @@
 * 배포 전 테스트
 ```
 # npm run server:bundle
-# http://hanyang-chatbot.kro.kr:8080/ 접속 후 테스트 (외부 IP)
+# https://hanyang-chatbot.kro.kr:8080/ 접속 후 테스트 (외부 IP)
 ```
 
 ## 배포하기

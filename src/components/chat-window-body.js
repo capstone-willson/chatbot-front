@@ -17,7 +17,7 @@ class ChatWindowBody extends HTMLElement {
 	connectedCallback() {
 		this.chatWindow = document.querySelector(`chat-window`)
 
-		this.socket = io.connect(`http://hanyang-chatbot.kro.kr:8088`, {
+		this.socket = io.connect(`https://hanyang-chatbot.kro.kr:8088`, {
 			path: `/socket.io`,
 		})
 

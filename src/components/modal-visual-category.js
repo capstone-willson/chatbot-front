@@ -38,7 +38,7 @@ class ModalVisualCategory extends HTMLElement {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`GET`, `http://hanyang-chatbot.kro.kr:8000/v2/visualization/doughnut/category/answer`)
+		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr:8000/v2/visualization/doughnut/category/answer`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
@@ -57,7 +57,7 @@ class ModalVisualCategory extends HTMLElement {
 			throw new Error(`XHR 호출 불가`)			
 		}
 		this.shadowRoot.querySelector(`.lds-roller`).style.display = `block`
-		xhr.open(`GET`, `http://hanyang-chatbot.kro.kr:8000/v2/visualization/doughnut/category/answer`)
+		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr:8000/v2/visualization/doughnut/category/answer`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
