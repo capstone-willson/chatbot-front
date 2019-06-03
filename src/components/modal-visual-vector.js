@@ -43,7 +43,7 @@ class ModalVisualVector extends HTMLElement {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`POST`, `http://34.80.42.161:8000/v1/analysis/visualize/similarity/questions`)
+		xhr.open(`POST`, `http://hanyang-chatbot.kro.kr:8000/v1/analysis/visualize/similarity/questions`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
@@ -67,7 +67,7 @@ class ModalVisualVector extends HTMLElement {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`POST`, `http://34.80.42.161:8000/v1/analysis/visualize/similarity/questions`)
+		xhr.open(`POST`, `http://hanyang-chatbot.kro.kr:8000/v1/analysis/visualize/similarity/questions`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {

@@ -76,7 +76,7 @@ class ChatWindowFooter extends HTMLElement {
 				throw new Error(`XHR 호출 불가`)
 			}
 
-			xhr.open(`POST`, `http://34.80.42.161:8000/v1/db/questions/add`)
+			xhr.open(`POST`, `http://hanyang-chatbot.kro.kr:8000/v1/db/questions/add`)
 			xhr.addEventListener(`readystatechange`, () => {
 				if (xhr.readyState === xhr.DONE) {
 					if (xhr.status === 200 || xhr.status === 201) {		
@@ -111,7 +111,7 @@ class ChatWindowFooter extends HTMLElement {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`POST`, `http://34.80.42.161:8000/v1/chat`)
+		xhr.open(`POST`, `http://hanyang-chatbot.kro.kr:8000/v1/chat`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {	
@@ -152,7 +152,7 @@ class ChatWindowFooter extends HTMLElement {
 		if(!xhr) {
 			throw new Error(`XHR 호출 불가`)
 		}		
-		xhr.open(`GET`, `http://34.80.42.161:8080/hanyangfood/`)			
+		xhr.open(`GET`, `http://hanyang-chatbot.kro.kr:8080/hanyangfood/`)			
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
@@ -213,7 +213,7 @@ class ChatWindowFooter extends HTMLElement {
 				throw new Error(`XHR 호출 불가`)			
 			}
 	
-			xhr.open(`POST`, `http://34.80.42.161:8000/v1/analysis/similarity/morphs`)
+			xhr.open(`POST`, `http://hanyang-chatbot.kro.kr:8000/v1/analysis/similarity/morphs`)
 			xhr.addEventListener(`readystatechange`, () => {
 				if (xhr.readyState === xhr.DONE) {
 					if (xhr.status === 200 || xhr.status === 201) {		
@@ -260,7 +260,7 @@ class ChatWindowFooter extends HTMLElement {
 			},
 			writeText() {
 				chatBody.reply(`
-					<form class='input-form' action='http://34.80.42.161:8000/v1/db/questions/add' method='post' target='ifra'>
+					<form class='input-form' action='http://hanyang-chatbot.kro.kr:8000/v1/db/questions/add' method='post' target='ifra'>
 						<label class='label-text' for='text'>등록질문:</label> <input id='text' name='text' type='text' />
 						<label class='label-answer' for='answer'>등록답변:</label> <input id='answer' name='answer' type='text' />
 						<label class='label-category' for='category'>등록카테고리:</label> <input id='category' name='category' type='text' />
@@ -376,7 +376,7 @@ class ChatWindowFooter extends HTMLElement {
 		if(!xhr) {
 			throw new Error(`XHR 호출 불가`)
 		}
-		xhr.open(`GET`, `http://34.80.42.161:8080/https://pingpong.us/api/reaction.php?custom=basic&query=${encodeURIComponent(text)}`)	
+		xhr.open(`GET`, `http://hanyang-chatbot.kro.kr:8080/https://pingpong.us/api/reaction.php?custom=basic&query=${encodeURIComponent(text)}`)	
 		xhr.setRequestHeader(`x-requested-with`, `XMLHttpRequest`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if(xhr.readyState === COMPLETED) {

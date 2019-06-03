@@ -47,7 +47,7 @@ class ModalContext extends HTMLElement {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`POST`, `http://34.80.42.161:8000/v2/db/context/`)
+		xhr.open(`POST`, `http://hanyang-chatbot.kro.kr:8000/v2/db/context/`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {	
@@ -96,7 +96,7 @@ class ModalContext extends HTMLElement {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`PATCH`, `http://34.80.42.161:8000/v2/db/context/`)
+		xhr.open(`PATCH`, `http://hanyang-chatbot.kro.kr:8000/v2/db/context/`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {	
@@ -125,7 +125,7 @@ class ModalContext extends HTMLElement {
 					throw new Error(`XHR 호출 불가`)			
 				}
 
-				xhr.open(`GET`, `http://34.80.42.161:8000/v2/db/context/`)
+				xhr.open(`GET`, `http://hanyang-chatbot.kro.kr:8000/v2/db/context/`)
 				xhr.addEventListener(`readystatechange`, () => {
 					if (xhr.readyState === xhr.DONE) {
 						if (xhr.status === 200 || xhr.status === 201) {	

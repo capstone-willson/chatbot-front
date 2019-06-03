@@ -60,7 +60,7 @@ class ModalShuttle extends HTMLElement {
 		return html`
 			${style}
 			<div id='modalShuttle'>
-				<iframe src='http://34.80.42.161/api/'></iframe>
+				<iframe src='http://hanyang-chatbot.kro.kr/api/'></iframe>
 			</div>
 		`
 	}	

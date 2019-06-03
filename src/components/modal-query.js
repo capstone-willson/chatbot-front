@@ -47,7 +47,7 @@ class ModalQuery extends HTMLElement {
 		return html`
 			${style}
 			<div id='modalQuery'>
-				<iframe src='http://34.80.42.161/api/'></iframe>
+				<iframe src='http://hanyang-chatbot.kro.kr/api/'></iframe>
 			</div>
 		`
 	}	

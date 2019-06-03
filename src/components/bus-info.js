@@ -35,7 +35,7 @@ class BusInfo extends HTMLElement {
 				if(!xhr) {
 					throw new Error(`XHR 호출 불가`)
 				}
-				xhr.open(`POST`, `http://34.80.42.161:8000/v1/chat`)
+				xhr.open(`POST`, `http://hanyang-chatbot.kro.kr:8000/v1/chat`)
 				xhr.addEventListener(`readystatechange`, () => {
 					if(xhr.readyState === COMPLETED) {
 						if(xhr.status === OK) {

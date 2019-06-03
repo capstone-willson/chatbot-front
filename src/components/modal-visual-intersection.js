@@ -75,7 +75,7 @@ class ModalVisualIntersection extends HTMLElement {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`GET`, `http://34.80.42.161:8000/v2/visualization/diagram/tag/ngram/${text}`)
+		xhr.open(`GET`, `http://hanyang-chatbot.kro.kr:8000/v2/visualization/diagram/tag/ngram/${text}`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {		

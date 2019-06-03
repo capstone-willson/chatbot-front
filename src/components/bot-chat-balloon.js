@@ -48,7 +48,7 @@ class BotChatBalloon extends HTMLElement {
 		if(!xhr) {
 			throw new Error(`XHR 호출 불가`)
 		}		
-		xhr.open(`GET`, `http://34.80.42.161:8000/v2/service/QA/subject?text=${_target.dataset.text}&subject=${_target.dataset.subject}`)
+		xhr.open(`GET`, `http://hanyang-chatbot.kro.kr:8000/v2/service/QA/subject?text=${_target.dataset.text}&subject=${_target.dataset.subject}`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
@@ -79,7 +79,7 @@ class BotChatBalloon extends HTMLElement {
 		if(!xhr) {
 			throw new Error(`XHR 호출 불가`)
 		}		
-		xhr.open(`GET`, `http://34.80.42.161:8080/hanyangfood/`)
+		xhr.open(`GET`, `http://hanyang-chatbot.kro.kr:8080/hanyangfood/`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
