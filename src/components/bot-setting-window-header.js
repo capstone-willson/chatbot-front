@@ -8,17 +8,14 @@ class BotSettingHeader extends HTMLElement {
 		render(this.render(), this.shadowRoot)
 
 		this.eventClickMenu = this.onClickMenu.bind(this)
-		this.eventClickRivescript = this.onClickRivescript.bind(this)
 	}
 
 	connectedCallback() {
 		this.shadowRoot.querySelector(`.menu-button`).addEventListener(`click`, this.eventClickMenu, true)
-		this.shadowRoot.querySelector(`.button-rivescript`).addEventListener(`click`, this.eventClickRivescript, true)
 	}
 
 	disconnectedCallback() {
 		this.shadowRoot.querySelector(`.menu-button`).removeEventListener(`click`, this.eventClickMenu, true)
-		this.shadowRoot.querySelector(`.button-rivescript`).removeEventListener(`click`, this.eventClickRivescript, true)
 	}
 
 	onClickMenu() {
@@ -30,44 +27,8 @@ class BotSettingHeader extends HTMLElement {
 		}
 	}
 
-	onClickRivescript() {
-		const body = document.querySelector(`bot-setting-window`).shadowRoot.querySelector(`bot-setting-body`)
-		const buttonRivescript = this.shadowRoot.querySelector(`.button-rivescript`)
-
-		this.emptyBody()
-		if (buttonRivescript.classList.contains(`on`)) {
-			buttonRivescript.classList.remove(`on`)
-		} else {
-			buttonRivescript.classList.add(`on`)
-			this.readRivescript().then(script => {			
-				body.textContent = script
-			}).catch(error => {
-				throw new Error(`No read Rivescript: ${error}`)
-			})
-		}				
-	}
-
 	emptyBody() {
 		document.querySelector(`bot-setting-window`).shadowRoot.querySelector(`bot-setting-body`).innerHTML = ``		
-	}
-
-	readRivescript() {
-		return new Promise((resolve, reject) => {
-			const xhr = new XMLHttpRequest()
-			const COMPLETE = 200
-
-			xhr.open(`GET`, `http://localhost:8080/assets/hy-lion.rive`)
-			xhr.send()
-			xhr.addEventListener(`readystatechange`, () => {
-				if (xhr.readyState === XMLHttpRequest.DONE) {
-					if (xhr.status === COMPLETE) {
-						resolve(xhr.response)
-					} else {
-						reject(xhr.statusText)
-					}
-				}
-			})
-		})
 	}
 
 	render() {
@@ -79,9 +40,7 @@ class BotSettingHeader extends HTMLElement {
 				</div>
 				<div class='title-submenu'>
 					<div class='title'>${i18next.t(`BOT_SETTING_TITLE`)}</div>
-					<div class='submenu'>
-						<button class='button-rivescript' title='${i18next.t(`CONVERT_RIVESCRIPT`)}'>${i18next.t(`CONVERT_RIVESCRIPT`)}</button>
-					</div>
+					<div class='submenu'></div>
 				</div>
 				<div class='menu'>		
 					<button class='menu-button' title='메뉴'>
@@ -116,13 +75,14 @@ const style = html`
 	
 	.setting-img {
 		position: absolute;
+		background-color: white;
 		width: 50px;
 		height: 50px;
 		border-radius: 25px;
-		background-image: url('/images/bot-setting.svg');
+		background-image: url(/images/bot-setting.svg);
 		background-repeat: no-repeat;
-    	background-position: center;
-    	background-size: contain;
+		background-position: center;
+		background-size: 30px;
 	}
 
 	.title-submenu {
@@ -134,7 +94,7 @@ const style = html`
 		padding-top: 20px;
 		font-size: 12px;
 		font-weight: bold;
-		color: #4A4C4E;
+		color: white;
 	}
 
 	.button-rivescript {
@@ -184,7 +144,7 @@ const style = html`
 	}
 
 	.menu-button svg {
-		color: #65717C;
+		color: white;
 		cursor: pointer;
 	}
 

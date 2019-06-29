@@ -75,6 +75,7 @@ function isValidHostName(hostname) {
  * @param request {ServerRequest}
  */
 function withCORS(headers, request) {
+	headers[`X-Frame-Options`] = `ALLOW-FROM localhost:8088`
 	headers[`access-control-allow-origin`] = `*`
 	const corsMaxAge = request.corsAnywhereRequestState.corsMaxAge
 	if (corsMaxAge) {
@@ -321,72 +322,36 @@ function getHandler(options, proxy) {
 		}
 
 		if (location.host === `iscorsneeded`) {
-			// Is CORS needed? This path is provided so that API consumers can test whether it's necessary
-			// to use CORS. The server's reply is always No, because if they can read it, then CORS headers
-			// are not necessary.
 			res.writeHead(200, {'Content-Type': `text/plain`})
 			res.end(`no`)
 			return
 		}
 
-		if (location.host === `hanyangfood`) {
-			const puppeteer = require('puppeteer')
-			res.writeHead(200, {'Content-Type': `text/plain; charset=UTF-8`})			
+		if (location.host === `options`) {			
+			res.writeHead(200, {'Content-Type': `text/html; charset=utf-8`})
+			fs.readFile('./views/index.html', (err, data) => {
+				if (err) {
+				  return console.error(err);
+				}
+				res.end(data, 'utf-8');
+			  });
+			return
+		}
 
-			crawl(13)
-			async function crawl(place) {
-				const browser = await puppeteer.launch()
-				const page = await browser.newPage()
-				const date = new Date()
-				const year = date.getFullYear()
-				const month = date.getMonth()
-				const day = date.getDate()
-				await page.goto(`https://www.hanyang.ac.kr/web/www/re${place}?p_p_id=foodView_WAR_foodportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_pos=1&p_p_col_count=2&_foodView_WAR_foodportlet_sFoodDateDay=${day}&_foodView_WAR_foodportlet_sFoodDateYear=${year}&_foodView_WAR_foodportlet_action=view&_foodView_WAR_foodportlet_sFoodDateMonth=${month}`, {waitUntil: 'networkidle2'})
-				// await page.waitForSelector('h3')
-				const links = await page.evaluate(() => {
-					const result = []
+		if (location.host === `hanyangfood`) {			
+			const Hanyangfood = require(`../mongodb/hanyangfood.js`)
 
-					let breakfast = Array.from(document.querySelectorAll(`h4`))
-					breakfast = breakfast.find(each => each.textContent === `조식`)
-					if (breakfast !== undefined) {
-						breakfast = breakfast.parentNode.querySelectorAll(`h3`)
-					
-						for(const menu of breakfast) {
-							result.push({breakfast: menu.textContent.trim()})
-						}
-					} else {
-						result.push({breakfast: null})
-					}
+			res.writeHead(200, {
+				'Content-Type': `application/json`,
+				'access-control-allow-origin': `*`})
 
-					let lunch = Array.from(document.querySelectorAll(`h4`))
-					lunch = lunch.find(each => each.textContent === `중식`)
-					if (lunch !== undefined) {
-						lunch = lunch.parentNode.querySelectorAll(`h3`)
-					
-						for(const menu of lunch) {
-							result.push({lunch: menu.textContent.trim()})
-						}
-					} else {
-						result.push({lunch: null})
-					}
-
-					let dinner = Array.from(document.querySelectorAll(`h4`))
-					dinner = dinner.find(each => each.textContent === `석식`)
-					if (dinner !== undefined) {
-						dinner = dinner.parentNode.querySelectorAll(`h3`)
-					
-						for(const menu of dinner) {
-							result.push({dinner: menu.textContent.trim()})
-						}
-					} else {
-						result.push({dinner: null})
-					}
-					
-				  	return result
-				})
-				browser.close()
-				res.end(JSON.stringify(links))
-			}						
+			Hanyangfood.find({}).then(schema => {
+				res.end(JSON.stringify(schema))
+			}).catch(err => {
+				console.error(err)
+				next(err)
+			})
+						
 			return
 		}
 

@@ -76,12 +76,12 @@ const style = html`
 		min-width: 20px;
 		width: fit-content;
 		max-width: calc(80vw - 65px);
-		background: #FFEB33;
+		background: #6B7EFC;
 		border-radius: 5px;
 		padding: 5px 10px 5px 10px;
 		box-sizing: border-box;
 		font-size: 13px;
-		color: #4A4C4E;
+		color: white;
 		margin-right: 20px;
 		margin-left: auto;
 	}
@@ -95,7 +95,7 @@ const style = html`
 		position: absolute;
 		pointer-events: none;
 		border-radius: 25px;
-		background: #FFEB33;
+		background: #6B7EFC;
 		z-index: -1;
 	}
 
@@ -108,9 +108,13 @@ const style = html`
 		position: absolute;
 		pointer-events: none;
 		border-radius: 25px;
-		background: #B2C7D9;
+		background: #EDEEFE;
 		z-index: -1;
 	}	
+
+	::selection {
+		background-color: yellow;
+	}
 </style>
 `
 

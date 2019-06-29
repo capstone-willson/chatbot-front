@@ -2,6 +2,9 @@ import {html, render} from '../../node_modules/lit-html/lit-html.js'
 import './bot-chat-balloon.js'
 import './my-chat-balloon.js'
 import './book-list.js'
+import './bus-info.js' 
+import '@vaadin/vaadin-tabs/vaadin-tabs.js'
+import '@vaadin/vaadin-list-box/vaadin-list-box.js'
 
 class ChatWindowBody extends HTMLElement {
 	constructor() {
@@ -14,19 +17,38 @@ class ChatWindowBody extends HTMLElement {
 	connectedCallback() {
 		this.chatWindow = document.querySelector(`chat-window`)
 
-		this.bot = new RiveScript()
+		this.socket = io.connect(`https://hanyang-chatbot.kro.kr:8088`, {
+			path: `/socket.io`,
+		})
 
-		// 라이브 스크립트 테스트 코드
-		// this.bot.loadFile(`/assets/hy-lion.rive`).then(this.loading_done.bind(this)).catch(this.loading_error)
+		this.socket.on(`botSay`, data => {
+			this.replyFront(data)
+		})
+
+		this.socket.on(`userSay`, data => {
+			this.sendFront(data)
+		})
+
+		this.socket.on(`muted`, () => {
+			const chatFooter = querySelectorShadowDom.querySelectorDeep(`chat-window-footer`)
+			chatFooter.canTyping = false
+		})
+
+		this.socket.on(`unmuted`, () => {
+			const chatFooter = querySelectorShadowDom.querySelectorDeep(`chat-window-footer`)			
+			chatFooter.canTyping = true
+		})
+	}
+
+	loading_done() {
+		this.bot.sortReplies()
 	}
 	
-	loading_done() {
+	botSay(sendText) {
 		const username = `hy-lion`
-		const sendText = `hello`
 
 		this.bot.sortReplies()		
 
-		this.send(sendText)
 		this.bot.reply(username, sendText).then(reply => {
 			this.reply(reply)
 		})
@@ -36,7 +58,12 @@ class ChatWindowBody extends HTMLElement {
 		throw new Error(`Error when loading files: ${error}`)
 	}
 
-	reply(text) {
+	reply(text, config = {backgroundColor: `white`}) {
+		this.replyFront(text, config)
+		this.socket.emit(`reply`, text)	
+	}
+
+	replyFront(text, config) {
 		const main = this.shadowRoot.querySelector(`main`)
 		const ONE = 1, LAST_CHILD_NUM = main.children.length - ONE
 		const lastChat = main.children[LAST_CHILD_NUM]
@@ -46,15 +73,20 @@ class ChatWindowBody extends HTMLElement {
 		if(isBot == false) {
 			const botChatBalloon = document.createElement(`bot-chat-balloon`)
 			main.appendChild(botChatBalloon)
-			botChatBalloon.chat(text)
-			this.chatWindow.scrollToLast()
+			botChatBalloon.chat(text, config)
+			document.querySelector(`chat-window`).scrollToLast()
 			return
 		}
-		lastChat.chat(text)
-		this.chatWindow.scrollToLast()
+		lastChat.chat(text, config)
+		document.querySelector(`chat-window`).scrollToLast()
 	}
 
 	send(text) {
+		this.sendFront(text)
+		this.socket.emit(`question`, text)
+	}
+
+	sendFront(text) {
 		const main = this.shadowRoot.querySelector(`main`)
 		const ONE = 1, LAST_CHILD_NUM = main.children.length - ONE
 		const lastChat = main.children[LAST_CHILD_NUM]
@@ -64,11 +96,11 @@ class ChatWindowBody extends HTMLElement {
 			const myChatBalloon = document.createElement(`my-chat-balloon`)
 			main.appendChild(myChatBalloon)
 			myChatBalloon.chat(text)
-			this.chatWindow.scrollToLast()
+			document.querySelector(`chat-window`).scrollToLast()
 			return
 		}
 		lastChat.chat(text)
-		this.chatWindow.scrollToLast()
+		document.querySelector(`chat-window`).scrollToLast()
 	}
 
 	waitSend(callback) {
@@ -86,6 +118,35 @@ class ChatWindowBody extends HTMLElement {
 			subtree: true || null,
 		}
 		observer.observe(this.shadowRoot, config)
+	}
+
+	// async showMap(location) {
+	// 	this.reply(`<div id='map' style='width:400px;height:300px;'></div>`)
+
+	// 	naver.maps.Service.geocode({
+	// 		query: location,
+	// 	}, (status, response) => {
+	// 		const botChat = this.shadowRoot.querySelectorAll(`bot-chat-balloon`)
+
+	// 		if (status !== naver.maps.Service.Status.OK) {
+	// 			throw new Error(`Something wrong!`)
+	// 		}
+	
+	// 		const result = response.v2,
+	// 			items = result.addresses
+	
+	// 		console.log(items)
+	// 		const mapOptions = {
+	// 			center: new naver.maps.LatLng(items[0][`y`], items[0][`x`]),
+	// 			zoom: 12,
+	// 		}
+			
+	// 		const map = new naver.maps.Map(botChat[botChat.length - 1].shadowRoot.querySelector(`#map`), mapOptions)
+	// 	})		
+	// }
+
+	sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms))
 	}
 
 	render() {
@@ -112,8 +173,10 @@ const style = html`
 	bot-chat-balloon, my-chat-balloon {
 		width: 100%;
 		min-height: min-content;
-	}
+	}	
 </style>
 `
 
 customElements.define(`chat-window-body`, ChatWindowBody)
+const chatWindowBody = new ChatWindowBody()
+export default chatWindowBody

@@ -1,5 +1,7 @@
 import {html, render} from '../../node_modules/lit-html/lit-html.js'
 import './chat-window-menu.js'
+import '@vaadin/vaadin-text-field/vaadin-text-field.js'
+
 
 class ChatWindowHeader extends HTMLElement {
 	constructor() {
@@ -10,26 +12,25 @@ class ChatWindowHeader extends HTMLElement {
 		
 		this.eventClickAlarm = this.onClickAlarm.bind(this)
 		this.eventClickMenu = this.onClickMenu.bind(this)
+		this.eventSubmenuSearch = this.onClickSubmenuSearch.bind(this)
 	}
 
 	connectedCallback() {
-		this.shadowRoot.querySelector(`.submenu-search`).addEventListener(`click`, this.onClickSubmenuSearch, true)
+		this.shadowRoot.querySelector(`vaadin-text-field`).addEventListener(`keydown`, this.eventSubmenuSearch, true)
 		this.shadowRoot.querySelector(`.menu-button`).addEventListener(`click`, this.eventClickMenu, true)
 		this.shadowRoot.querySelector(`.menu-alarm`).addEventListener(`click`, this.eventClickAlarm, true)
 	}
 
 	disconnectedCallback() {
-		this.shadowRoot.querySelector(`.submenu-search`).removeEventListener(`click`, this.onClickSubmenuSearch, true)
+		this.shadowRoot.querySelector(`vaadin-text-field`).removeEventListener(`keydown`, this.eventSubmenuSearch, true)
 		this.shadowRoot.querySelector(`.menu-button`).removeEventListener(`click`, this.eventClickMenu, true)
 		this.shadowRoot.querySelector(`.menu-alarm`).removeEventListener(`click`, this.eventClickAlarm, true)
 	}
 
-	onClickSubmenuPicture() {
-		alert(i18next.t(`NO_IMPLEMENT`))
-	}
-
-	onClickSubmenuSearch() {
-		alert(i18next.t(`NO_IMPLEMENT`))
+	onClickSubmenuSearch(event) {
+		if (event.keyCode === 13) {
+			this.findString(event.target.value)
+		}		
 	}
 
 	onClickMenu() {
@@ -60,6 +61,19 @@ class ChatWindowHeader extends HTMLElement {
 		`
 	}
 
+	findString(str) {
+		let strFound
+		strFound = window.find(str)
+		if (!strFound) {
+			strFound = window.find(str, 0, 0, 1)						
+		}
+		document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`).shadowRoot.querySelectorAll(`bot-chat-balloon`).forEach(each => {
+			if (each.shadowRoot.getSelection().focusNode) {					
+				each.shadowRoot.getSelection().focusNode.parentElement.scrollIntoView()
+			}
+		})
+	}
+
 	render() {
 		return html`
 			${style}
@@ -71,7 +85,7 @@ class ChatWindowHeader extends HTMLElement {
 					<div class='name'>${i18next.t(`BOT_NAME`)}</div>
 					<div class='submenu'>
 						<button class='submenu-search'>
-							<svg height='14' width='14' aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg>
+							<vaadin-text-field placeholder='대화내용 검색'></vaadin-text-field>
 						</button>						
 					</div>
 				</div>
@@ -122,14 +136,14 @@ const style = html`
 
 	.name-submenu {
 		display:grid;
-		grid-template-rows: 1fr 1fr;
+		grid-template-rows: auto auto;
 	}
 
 	.name {
 		padding-top: 20px;
-		font-size: 12px;
+		font-size: 14px;
 		font-weight: bold;
-		color: #4A4C4E;
+		color: white;
 	}
 
 	.submenu > button {
@@ -145,11 +159,22 @@ const style = html`
 		padding-left: 0;
 	}
 
-	.submenu-search svg {
-		color: #65717C;
+	.submenu-search {
+		margin: 0 !important;
+		padding: 0 !important;
 	}
 
-	.submenu svg:hover, .menu svg:hover {
+	.submenu-search * {
+		color: white;
+		height: 25px;
+    	font-size: 14px;
+	}
+
+	.submenu svg:hover {
+		color: black;
+	}
+
+	.menu svg:hover {
 		color: black;
 	}
 
@@ -170,12 +195,13 @@ const style = html`
 	}
 
 	.menu-alarm svg {
-		color: #65717C;
+		color: white;
+		transition: all 0.2s ease-in;
 	}
 
 	.menu-alarm, .menu-button {
 		vertical-align: middle;				
-		position:relative;
+		position: relative;
 		top: 50%;
 		transform: translateY(-50%);
 		z-index: 20;
@@ -185,8 +211,9 @@ const style = html`
 	}
 
 	.menu-button > svg {
-		color: #65717C;
+		color: white;
 		cursor: pointer;
+		transition: all 0.2s ease-in;
 	}
 
 	chat-window-menu {
@@ -195,6 +222,11 @@ const style = html`
 		top: 24px;
 		right: -10px;
 	}
+
+	.menu-alarm {
+		opacity: 0;
+		pointer-events: none;
+	}	
 </style>
 `
 

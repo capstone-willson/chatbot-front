@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<meta charset="UTF-8"/>
 	<title i18n-content="APP_NAME"></title>	
-	<link href="/stylesheets/index.css" type="text/css" rel="stylesheet"/>
+	<link href="/stylesheets/index.css" type="text/css" rel="stylesheet"/>	
 </head>
 <body>
 	<div class="app-root">
@@ -17,9 +17,14 @@
 		</div>		
 	</div>
 
-	<script src="https://unpkg.com/i18next/i18next.js"></script>
-	<script src="https://unpkg.com/rivescript@latest/dist/rivescript.min.js"></script>
+	<script src="/lib/querySelectorShadowDom.js"></script>
+	<script src="https://unpkg.com/i18next/i18next.js"></script>	
     <script type="module" src="/javascripts/i18n-contents.js"></script>
-    <script type="module" src="/javascripts/main-bundle.js"></script>
+	<script type="module" src="/javascripts/main-bundle.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script defer src="/lib/d3/dist/d3.js"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+	<script defer src="/lib/venn.js/build/venn.js"></script>
+	<!-- <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=wtqz64oxbo&submodules=geocoder"></script> -->	
 </body>
 </html>

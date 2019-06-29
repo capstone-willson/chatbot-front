@@ -1,4 +1,4 @@
-import locale_ko from '/src/_locales/ko.js'
+import locale_ko from '../_locales/ko.js'
 
 i18next.init({
 	lng: `ko`,
@@ -17,4 +17,3 @@ i18next.init({
 		})
 	}
 })
- 

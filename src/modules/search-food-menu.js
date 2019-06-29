@@ -12,9 +12,9 @@ class SearchFoodMenu {
 					const chatBody = document.querySelector(`chat-window`).shadowRoot.querySelector(`chat-window-body`)
 					if (typeof JSON.parse(xhr.responseText) === `string`) {
 						return
-					}
+					}					
 					JSON.parse(xhr.responseText).forEach(each => {
-						chatBody.reply(each)
+						chatBody.reply(JSON.stringify(each))
 					})					
 				} else {
 					throw new Error(`No XHR`)

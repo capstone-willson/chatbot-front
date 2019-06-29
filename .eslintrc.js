@@ -110,7 +110,7 @@ module.exports = {
         // 정적 메소드 아니면, this 사용, 정적 메소드면 static 사용
         // "class-methods-use-this": 1,
         // 조건문은 4개 미만까지 사용 가능
-        "complexity": [2, 4],
+        // "complexity": [2, 4],
         "consistent-return": 1,
         // 일관된 조건 블록 형성
         "curly": 1,
@@ -169,7 +169,7 @@ module.exports = {
         // \ 로 띄어쓰기 금지, 표준이 아닌데 관행으로 남음
         "no-multi-str": 1,
         // new를 사용한다면 담을 변수 필요
-        "no-new": 1,
+        // "no-new": 1,
         // 잘 안쓰는 스타일, 좋지 않은 관행
         "no-new-func": 2,
         // 잘 알고있는 객체는 new 금지(String, Number, Boolean)
@@ -249,8 +249,8 @@ module.exports = {
         "quotes": [1, "backtick"],
         "semi": [1, "never"],
         // "max-params": [1, 2],
-        "max-lines-per-function": [2, 40],
-
+        // "max-lines-per-function": [2, 40], 
+ 
         // ECMAScript 6
         "arrow-body-style": 1,
         "arrow-parens": [1, `as-needed`],
@@ -273,5 +273,11 @@ module.exports = {
 		"whale": true,
 		"i18next": true,
 		"RiveScript": true,
+		"d3": true,
+		"venn": true,
+		"naver": true,
+		"Chart": true,
+		"querySelectorShadowDom": true,
+		"io": true,
     }
 };
