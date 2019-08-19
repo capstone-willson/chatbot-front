@@ -1,6 +1,6 @@
 import {html, render} from '../../node_modules/lit-html/lit-html.js'
 
-class ModalVisualKeywords extends HTMLElement {
+class ModalVisualCategory2 extends HTMLElement {
 	constructor() {
 		super()
 
@@ -8,20 +8,17 @@ class ModalVisualKeywords extends HTMLElement {
 		render(this.render(), this.shadowRoot)
 
 		this.eventClickBack = this.onClickBack.bind(this)
-		this.eventKeyDownEnter = this.onKeyDownEnter.bind(this)
 	}
 
 	connectedCallback() {
 		this.addEventListener(`click`, this.eventClickBack, false)
 		this.shadowRoot.addEventListener(`click`, event => event.stopPropagation(), false)
-		this.shadowRoot.querySelector(`.query`).addEventListener(`keydown`, this.eventKeyDownEnter, false)		
 
 		this.loadXHR()
 	}
 
 	disconnectedCallback() {
 		this.removeEventListener(`click`, this.eventClickBack, false)
-		this.shadowRoot.querySelector(`.query`).removeEventListener(`keydown`, this.eventKeyDownEnter, false)
 	}
 
 	onClickBack() {
@@ -34,50 +31,49 @@ class ModalVisualKeywords extends HTMLElement {
 		}				
 	}
 
-	loadXHR(text = 10) {
+	loadXHR() {
 		const xhr = new XMLHttpRequest()
 
 		if(!xhr) {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr:8000/v2/visualization/bar/keyword/query/${text}`)
+		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr:8000/v2/visualization/doughnut/category/answer`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
 					console.info(JSON.parse(xhr.responseText))
 					this.draw(JSON.parse(xhr.responseText))
 				}
-
 			}			
 		})
 		xhr.send()
 	}
 
-	reloadXHR(text = 10) {
+	reloadXHR() {
 		const xhr = new XMLHttpRequest()
 
 		if(!xhr) {
 			throw new Error(`XHR 호출 불가`)			
 		}
 		this.shadowRoot.querySelector(`.lds-roller`).style.display = `block`
-		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr:8000/v2/visualization/bar/keyword/query/${text}`)
+		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr:8000/v2/visualization/doughnut/category/answer`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
 					const json = JSON.parse(xhr.responseText)					
 					this.chart.config = {
-						type: `horizontalBar`,
+						type: `doughnut`,
 						data: {
 							datasets: [{
 								data: Object.entries(json).map(el => el[1]),
-								backgroundColor: new Array(10).fill().map(() => `rgb(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`),
+								backgroundColor: [`#A5DFF9`, `#FEEE7D`, `#9055A2`, `#FFA500`, `#FAB1CE`, `#9DC8C8`],
 							}],
-							labels: Object.entries(json).map(el => el[0]),
+							labels: [`셔틀버스`, `도서관`, `일상대화`, `식단`, `QA`, `사전답변`],
 						},
 						options: {
 							legend: {
-								display: false,
+								display: true,
 								fullWidth: true,
 							},
 							showAllTooltips: true,
@@ -95,17 +91,17 @@ class ModalVisualKeywords extends HTMLElement {
 	draw(json) {
 		const ctx = this.shadowRoot.getElementById(`myChart`).getContext(`2d`)		
 		this.chart = new Chart(ctx, {
-			type: `horizontalBar`,
+			type: `doughnut`,
 			data: {
 				datasets: [{
 					data: Object.entries(json).map(el => el[1]),
-					backgroundColor: new Array(10).fill().map(() => `rgb(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`),
+					backgroundColor: [`#A5DFF9`, `#FEEE7D`, `#9055A2`, `#FFA500`, `#FAB1CE`, `#9DC8C8`],
 				}],
-				labels: Object.entries(json).map(el => el[0]),
+				labels: [`셔틀버스`, `도서관`, `일상대화`, `식단`, `QA`, `사전답변`],
 			},
 			options: {
 				legend: {
-					display: false,
+					display: true,
 					position: `bottom`,
 					labels: {
 						usePointStyle: true,
@@ -120,11 +116,10 @@ class ModalVisualKeywords extends HTMLElement {
 	render() {
 		return html`
 			${style}			
-			<div id='modalVisualKeywords'>
-				<div class='title'>${i18next.t(`PROCESS_VISUAL_KEYWORDS_TITLE`)}</div>
-				<input class='query form-control' type='text' placeholder='${i18next.t(`PROCESS_VISUAL_KEYWORDS_NUMBER`)}' />
+			<div id='modalVisualCategory'>
+				<div class='title'>${i18next.t(`PROCESS_VISUAL_CATEGORY_TITLE`)}</div>
 				<div class='lds-roller'><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-				<canvas id='myChart' width='400' height='700'></canvas>
+				<canvas id='myChart' width='400' height='500'></canvas>
 			</div>
 		`
 	}
@@ -151,7 +146,7 @@ const style = html`
 		background-color: rgba(0, 0, 0, 0.4);
 		z-index: 50;
 	}
-	#modalVisualKeywords {
+	#modalVisualCategory {
 		position: absolute;
 		width: 400px;
 		height: 90vh;
@@ -174,7 +169,7 @@ const style = html`
 			height: 90vh;
 		}
 	}
-	#modalVisualKeywords > .wrap {
+	#modalVisualCategory > .wrap {
 		position: relative;
 	}
 	
@@ -194,8 +189,6 @@ const style = html`
 		position: absolute;
 		top: 100px;
 		left: 0;
-		width: 400px;
-		height: 700px;
 	}
 	.query {
 		top: 55px;
@@ -297,4 +290,4 @@ const style = html`
 </style>
 `
 
-customElements.define(`modal-visual-keywords`, ModalVisualKeywords)
+customElements.define(`modal-visual-category-2`, ModalVisualCategory2)

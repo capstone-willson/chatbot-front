@@ -19,7 +19,7 @@ module.exports = (server, app, sessionMiddleware) => {
 			req.connection.socket.remoteAddress
 		socket.join(socket.id)
         console.info(`새 클라이언트 접속`, ip, socket.id, req.id)
-        
+
         socket.on(`disconnect`, () => {
             // socket.id = 사용자 고유ID, 사용자 구별
 			console.info(`클라이언트 접속해제`, ip, socket.id)

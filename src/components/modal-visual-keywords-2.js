@@ -1,6 +1,6 @@
 import {html, render} from '../../node_modules/lit-html/lit-html.js'
 
-class ModalVisualKeywords extends HTMLElement {
+class ModalVisualKeywords2 extends HTMLElement {
 	constructor() {
 		super()
 
@@ -41,7 +41,7 @@ class ModalVisualKeywords extends HTMLElement {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr:8000/v2/visualization/bar/keyword/query/${text}`)
+		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr:8000/v2/visualization/bar/keyword/answer/${text}`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
@@ -61,7 +61,7 @@ class ModalVisualKeywords extends HTMLElement {
 			throw new Error(`XHR 호출 불가`)			
 		}
 		this.shadowRoot.querySelector(`.lds-roller`).style.display = `block`
-		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr:8000/v2/visualization/bar/keyword/query/${text}`)
+		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr:8000/v2/visualization/bar/keyword/answer/${text}`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
@@ -297,4 +297,4 @@ const style = html`
 </style>
 `
 
-customElements.define(`modal-visual-keywords`, ModalVisualKeywords)
+customElements.define(`modal-visual-keywords-2`, ModalVisualKeywords2)

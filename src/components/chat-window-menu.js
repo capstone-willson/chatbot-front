@@ -1,5 +1,6 @@
 import {html, render} from '../../node_modules/lit-html/lit-html.js'
 import Main from '../main.js'
+import './modal-login.js'
 
 class ChatWindowMenu extends HTMLElement {
 	constructor() {
@@ -10,7 +11,7 @@ class ChatWindowMenu extends HTMLElement {
 
 		this.menuState = `hide`
 		this.eventClickBotSetting = this.onClickBotSetting.bind(this)
-		this.eventClickBotMode = this.onClickBotMode.bind(this)
+		this.eventClickBotMode = this.onClickBotMode.bind(this)		
 	}
 
 	connectedCallback() {
@@ -126,7 +127,7 @@ class ChatWindowMenu extends HTMLElement {
 		xhr.send(`password=${password}&target=${target}`)
 	}
 
-	openBotSetting() {
+	openBotSetting() {				
 		Main.loadingDOM()
 		Main.renderBotSettingWindow()
 	}

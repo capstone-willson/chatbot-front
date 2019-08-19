@@ -3,7 +3,7 @@ import {html, render} from '../../node_modules/lit-html/lit-html.js'
 window.css = new CSSStyleSheet()
 window.css.replace(`@import url("/stylesheets/bootstrap.min.css")`)
 
-class ModalVisualIntersection extends HTMLElement {
+class ModalVisualTag extends HTMLElement {
 	constructor() {
 		super()
 
@@ -79,7 +79,7 @@ class ModalVisualIntersection extends HTMLElement {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr/api/v2/visualization/diagram/tag/ngram/${text}`)
+		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr/api/v2/visualization/diagram/tag/${text}`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {		
@@ -152,7 +152,7 @@ class ModalVisualIntersection extends HTMLElement {
 		return html`
 			${style}			
 			<div id='modalVisualIntersection'>
-				<div class='title'>${i18next.t(`PROCESS_VISUAL_INTER_TITLE`)}</div>				
+				<div class='title'>형태소 유사도 분석</div>				
 				<input class='query form-control' type='text' placeholder='${i18next.t(`PROCESS_VISUAL_INTER_QUERY`)}' />
 				<img class='arrow' src='../../images/arrows-alt-v.svg' width='30' height='30' />
 				<span class='score'>SCORE</span>
@@ -412,4 +412,4 @@ const style = html`
 </style>
 `
 
-customElements.define(`modal-visual-intersection`, ModalVisualIntersection)
+customElements.define(`modal-tag`, ModalVisualTag)

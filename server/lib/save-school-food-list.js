@@ -20,7 +20,7 @@ async function crawl(place) {
 		args: [`--no-sandbox`, `--disable-setuid-sandbox`],
 	})
 	const page = await browser.newPage()
-	const date = new Date()
+	const date = new Date(new Date().setTime(new Date().getTime() + 1000 * 9 * 60 * 60))
 	const year = date.getFullYear()
 	const month = date.getMonth()
 	const day = date.getDate()
@@ -81,7 +81,7 @@ async function crawl(place) {
 		if (err) {
 			console.error(err)
 		} else {
-			console.info(_result) 
+			// console.info(_result) 
 		}
 	}) 
 }
