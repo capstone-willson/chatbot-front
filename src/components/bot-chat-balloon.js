@@ -37,8 +37,8 @@ class BotChatBalloon extends HTMLElement {
 			if (target.querySelector(`string`)) {
 				target.querySelector(`string`).style.color = `blue`
 			}			
-		}
-		this.loadXhrQA(target)		
+			this.loadXhrQA(target)		
+		}		
 	}
 
 	loadXhrQA(target) {
@@ -48,7 +48,7 @@ class BotChatBalloon extends HTMLElement {
 		if(!xhr) {
 			throw new Error(`XHR 호출 불가`)
 		}		
-		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr:8000/v2/service/QA/subject?text=${_target.dataset.text}&subject=${_target.dataset.subject}`)
+		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr:8000/v2/service/QA/_id?text=${_target.dataset.text}&_id=${_target.dataset.id}`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
@@ -73,19 +73,18 @@ class BotChatBalloon extends HTMLElement {
 
 	onClickTabs(event) {
 		const target = event.target
-		const list = this.shadowRoot.querySelector(`vaadin-list-box`)
-		const xhr = new XMLHttpRequest()		
+		if (target.localName === `vaadin-tab`) {			
+			const list = this.shadowRoot.querySelector(`vaadin-list-box`)
+			const xhr = new XMLHttpRequest()		
 
-		if(!xhr) {
-			throw new Error(`XHR 호출 불가`)
-		}		
-		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr:8080/hanyangfood/`)
-		xhr.addEventListener(`readystatechange`, () => {
-			if (xhr.readyState === xhr.DONE) {
-				if (xhr.status === 200 || xhr.status === 201) {
-					const json = JSON.parse(xhr.responseText)
-
-					if (target.localName === `vaadin-tab`) {
+			if(!xhr) {
+				throw new Error(`XHR 호출 불가`)
+			}		
+			xhr.open(`GET`, `https://34.80.42.161:8080/hanyangfood/`)
+			xhr.addEventListener(`readystatechange`, () => {
+				if (xhr.readyState === xhr.DONE) {
+					if (xhr.status === 200 || xhr.status === 201) {
+						const json = JSON.parse(xhr.responseText)					
 						if (target.textContent === `교직원`) {
 							list.innerHTML = `
 								${json[0][`foodList`][0] ? json[0][`foodList`][0].map(each => `<vaadin-item disabled>아침 ${each}</vaadin-item>`).join(``): ``}
@@ -126,13 +125,13 @@ class BotChatBalloon extends HTMLElement {
 								<hr>
 								${json[4][`foodList`][2] ? json[4][`foodList`][2].map(each => `<vaadin-item disabled>저녁 ${each}</vaadin-item>`).join(``): ``}
 							`	
-						}
+						}					
 					}
 				}
-			}
-		})
+			})
 
-		xhr.send()				
+			xhr.send()		
+		}		
 	}
 
 	chat(text, config) {

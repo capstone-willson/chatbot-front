@@ -3,8 +3,11 @@ import './bot-setting-window.js'
 
 export default class Main {
 	static init() {
-		this.loadingDOM()		
+		this.loadingDOM()
 		this.router()
+			.isEdge()
+			.isIE11()
+			.isIE10()
 			.isPathRoot()
 			.isPathOptions()
 	}
@@ -12,6 +15,29 @@ export default class Main {
 	static router() {
 		const path = location.pathname
 		return {
+			isEdge() {
+				if (navigator.userAgent.includes(`Edge`)) {
+					document.querySelector(`.loading`).innerHTML += `브라우저 지원X`
+					return false
+				}
+				return this
+			},
+			isIE11() {
+				if (navigator.userAgent.includes(`rv:11`)) {
+					this.emptyDOM()
+					document.querySelector(`.loading`).innerHTML += `브라우저 지원X`
+					return false
+				}
+				return this
+			},
+			isIE10() {
+				if (navigator.userAgent.includes(`MSIE`)) {
+					this.emptyDOM()
+					document.querySelector(`.loading`).innerHTML += `브라우저 지원X`
+					return false
+				}
+				return this
+			},
 			isPathRoot() {
 				if (path === `/`) {					
 					Main.renderChatWindow()

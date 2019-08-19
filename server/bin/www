@@ -1,22 +1,36 @@
 const app = require(`../app`)
 const debug = require(`debug`)(`server:server`)
+const https = require(`https`)
 const http = require(`http`)
+const fs = require(`fs`)
 const cors_proxy = require(`../lib/cors-anywhere`)
 
 const webSocket = require(`./socket.js`)
 const session = require(`express-session`)
 
+const privateKey = fs.readFileSync(`/etc/nginx/private.key`, `utf8`)
+const certificate = fs.readFileSync(`/etc/nginx/certificate.crt`, `utf8`)
+
+const options = {
+	key: privateKey,
+	cert: certificate,
+}
+
 const host = process.env.HOST || `0.0.0.0`
 const port = process.env.PORT || 8088
-// const port = normalizePort(process.env.PORT || `3000`)
+
 app.set(`port`, port)
 
-const server = http.createServer(app)
+const server = https.createServer(options, app)
+
+const httpServer = http.createServer(app)
+
 const serverProxy = cors_proxy.createServer({
 	originWhitelist: [],
 	requireHeader: [],
 	removeHeaders: [`cookie`, `cookie2`],
 	helpFile: `./views/index.html`,
+	httpsOptions: options,
 }).listen(8080, `0.0.0.0`, () => {
 	console.info(`Running...`)
 })
@@ -24,6 +38,10 @@ const serverProxy = cors_proxy.createServer({
 server.listen(port)
 server.on(`error`, onError)
 server.on(`listening`, onListening)
+
+httpServer.listen(8089)
+httpServer.on(`error`, onError)
+httpServer.on(`listening`, onListening)
 
 function normalizePort(val) {
 	const port = parseInt(val, 10)
@@ -44,12 +62,14 @@ const sessionMiddleware = session({
 	saveUninitialized: false,
 	secret: process.env.COOKIE_SECRET,
 	cookie: {
-		httpOnly: true,
-		secure: false,
+		domain: `hanyang-chatbot.kro.kr`,
+		httpOnly: false,
+		secure: true,
 	},
+	name: `io-test`,
 })
 
-app.use(sessionMiddleware)
+// app.use(sessionMiddleware)
 
 webSocket(server, app, sessionMiddleware)
 

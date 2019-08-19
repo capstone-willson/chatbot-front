@@ -16,12 +16,28 @@ const connect = require(`./mongodb/mongoose.js`)
 const doScheduler = require(`./lib/save-school-food-list.js`)
 // const doScheduler2 = require(`./lib/save-class-info.js`)
 
+const session = require(`express-session`)
+
 const app = express()
 app.use(compression())
 app.use(cors())
 app.use(helmet({
 	frameguard: false
 }))
+
+const sessionMiddleware = session({
+	resave: false,
+	saveUninitialized: false,
+	secret: process.env.COOKIE_SECRET,
+	cookie: {
+		domain: `hanyang-chatbot.kro.kr`,
+		httpOnly: false,
+		secure: true,
+	},
+	name: `io-test`,
+})
+
+app.use(sessionMiddleware)
 
 connect()
 doScheduler()

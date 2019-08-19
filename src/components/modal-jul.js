@@ -4,7 +4,7 @@ import './toast.js'
 window.css = new CSSStyleSheet()
 window.css.replace(`@import url("/stylesheets/bootstrap.min.css")`)
 
-class ModalContext extends HTMLElement {
+class ModalJul extends HTMLElement {
 	constructor() {
 		super()				
 
@@ -14,14 +14,12 @@ class ModalContext extends HTMLElement {
 
 		this.eventClickBack = this.onClickBack.bind(this)
 		this.eventClickCreate = this.onClickCreate.bind(this)
-		this.eventClickModify = this.onClickModify.bind(this)
 	}
 
 	connectedCallback() {
 		this.addEventListener(`click`, this.eventClickBack, false)
 		this.shadowRoot.addEventListener(`click`, event => event.stopPropagation(), false)
 		this.shadowRoot.querySelector(`.area-btn-3`).addEventListener(`click`, this.eventClickCreate, false)
-		this.shadowRoot.querySelector(`.modal-context`).addEventListener(`click`, this.eventClickModify, false)
 
 		this.createContent()
 			.loadXHR()
@@ -30,7 +28,6 @@ class ModalContext extends HTMLElement {
 	disconnectedCallback() {
 		this.removeEventListener(`click`, this.eventClickBack, false)
 		this.shadowRoot.querySelector(`.area-btn-3`).removeEventListener(`click`, this.eventClickCreate, false)
-		this.shadowRoot.querySelector(`.modal-context`).removeEventListener(`click`, this.eventClickModify, false)
 	}
 
 	onClickBack() {
@@ -40,14 +37,14 @@ class ModalContext extends HTMLElement {
 	onClickCreate() {		
 		const xhr = new XMLHttpRequest()
 		const formData = new FormData()
-		formData.append(`subject`, this.shadowRoot.querySelector(`.create-subject`).value)
-		formData.append(`text`, this.shadowRoot.querySelector(`.create-text`).value)
+		formData.append(`orig`, this.shadowRoot.querySelector(`.create-subject`).value)
+		formData.append(`sub`, this.shadowRoot.querySelector(`.create-text`).value)
 
 		if(!xhr) {
 			throw new Error(`XHR 호출 불가`)			
 		}
 
-		xhr.open(`POST`, `https://hanyang-chatbot.kro.kr:8000/v2/db/context/`)
+		xhr.open(`POST`, `https://hanyang-chatbot.kro.kr/api/v2/db/voca/jul-immal`)
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {	
@@ -63,7 +60,7 @@ class ModalContext extends HTMLElement {
 					createDiv.classList.add(`content`)
 					createDiv.innerHTML = `
 					<input type='hidden' value='${this.shadowRoot.querySelector(`.oId`).value}' />
-					<input type='text' class='form-control area-subject' placeholder='Subject' value='${this.shadowRoot.querySelector(`.create-subject`).value}' />					
+					<input type='text' class='form-control area-subject' placeholder='줄임말' value='${this.shadowRoot.querySelector(`.create-subject`).value}' />					
 					<textarea class='form-control area-text' rows='5'>${this.shadowRoot.querySelector(`.create-text`).value}</textarea>
 					<button type='button' class='btn btn-info area-btn'>수정</button>
 					<button type='button' class='btn btn-danger area-btn-2'>삭제</button>
@@ -77,41 +74,6 @@ class ModalContext extends HTMLElement {
 		xhr.send(formData)
 		return this
 	}
-
-	onClickModify(event) {
-		const target = event.target
-
-		if (!target.classList.contains(`area-btn`)) {
-			return this
-		}
-
-		const xhr = new XMLHttpRequest()
-		const formData = new FormData()
-		formData.append(`_id`, target.closest(`.content`).querySelector(`.oId`).value)		
-		formData.append(`subject`, target.closest(`.content`).querySelector(`.area-subject`).value)		
-		formData.append(`text`, target.closest(`.content`).querySelector(`.area-text`).value)
-		
-
-		if(!xhr) {
-			throw new Error(`XHR 호출 불가`)			
-		}
-
-		xhr.open(`PATCH`, `https://hanyang-chatbot.kro.kr:8000/v2/db/context/`)
-		xhr.addEventListener(`readystatechange`, () => {
-			if (xhr.readyState === xhr.DONE) {
-				if (xhr.status === 200 || xhr.status === 201) {	
-					const div = document.createElement(`div`)
-					div.innerHTML = `
-					<modal-toast text='DB 문단 수정 성공!'></modal-toast>
-					`
-					document.body.appendChild(div)
-				}
-			}			
-		})
-		xhr.send(formData)
-		return this
-	}
-
 	
 
 	createContent() {
@@ -125,7 +87,7 @@ class ModalContext extends HTMLElement {
 					throw new Error(`XHR 호출 불가`)			
 				}
 
-				xhr.open(`GET`, `https://hanyang-chatbot.kro.kr:8000/v2/db/context/`)
+				xhr.open(`GET`, `https://hanyang-chatbot.kro.kr/api/v2/db/voca/jul-immal`)
 				xhr.addEventListener(`readystatechange`, () => {
 					if (xhr.readyState === xhr.DONE) {
 						if (xhr.status === 200 || xhr.status === 201) {	
@@ -143,8 +105,8 @@ class ModalContext extends HTMLElement {
 					div.classList.add(`content`)
 					div.innerHTML = `
 					<input type='hidden' class='oId' value='${each[`_id`]}' />
-					<input type='text' class='form-control area-subject' placeholder='Subject' value='${each[`subject`]}' />					
-					<textarea class='form-control area-text' rows='5'>${each[`text`]}</textarea>
+					<input type='text' class='form-control area-subject' placeholder='Subject' value='${each[`orig`]}' />					
+					<textarea class='form-control area-text' rows='5'>${each[`sub`]}</textarea>
 					<button type='button' class='btn btn-info area-btn'>수정</button>
 					<button type='button' class='btn btn-danger area-btn-2'>삭제</button>
 					`
@@ -159,10 +121,10 @@ class ModalContext extends HTMLElement {
 		return html`
 			${style}						
 			<div class='modal-context'>
-				<h1 class='title'>문단 관리</h1>
+				<h1 class='title'>줄임말 처리</h1>
 				<div class='content'>
-					<input type='text' class='form-control area-subject create-subject' placeholder='Subject' />					
-					<textarea class='form-control area-text create-text' rows='5'></textarea>
+					<input type='text' class='form-control area-subject create-subject' placeholder='줄임말' />					
+					<textarea class='form-control area-text create-text' rows='5' placeholder="원래 단어"></textarea>
 					<button type='button' class='btn btn-success area-btn-3'>생성</button>
 				</div>
 			</div>
@@ -229,18 +191,17 @@ const style = html`
 
 	.content {
 		display: grid;
-		grid-auto-rows: min-content;
-		grid-template-columns: repeat(2, minmax(auto, 50%));
+		grid-auto-rows: 40px 40px;
+		grid-template-columns: 80% 20%;
 		grid-template-areas: 
-			"b b"
-			"c c"
-			"d e";
+			"a b"
+			"c d";
 		padding: 5px 20px 5px 5px;
 		height: min-content;
 	}
 
 	.area-subject {
-		grid-area: b;
+		grid-area: a;
 	}
 
 	.area-text {
@@ -248,17 +209,17 @@ const style = html`
 	}
 
 	.area-btn {		
-		grid-area: d;
+		grid-area: b;
 	}
 
 	.area-btn-2 {		
-		grid-area: e;
+		grid-area: d;
 	}
 
 	.area-btn-3 {		
-		grid-area: d / span 2;
+		grid-area: b / span 1 / span 2;
 	}
 </style>
 `
 
-customElements.define(`modal-context`, ModalContext)
+customElements.define(`modal-jul`, ModalJul)

@@ -152,7 +152,7 @@ class ChatWindowFooter extends HTMLElement {
 		if(!xhr) {
 			throw new Error(`XHR 호출 불가`)
 		}		
-		xhr.open(`GET`, `https://hanyang-chatbot.kro.kr:8080/hanyangfood/`)			
+		xhr.open(`GET`, `https://34.80.42.161:8080/hanyangfood/`)			
 		xhr.addEventListener(`readystatechange`, () => {
 			if (xhr.readyState === xhr.DONE) {
 				if (xhr.status === 200 || xhr.status === 201) {
@@ -161,7 +161,6 @@ class ChatWindowFooter extends HTMLElement {
 						<vaadin-tab>교직원</vaadin-tab>
 						<vaadin-tab>학생식당</vaadin-tab>
 						<vaadin-tab>기숙사</vaadin-tab>
-						<vaadin-tab>푸드코트</vaadin-tab>
 						<vaadin-tab>창업보육센터</vaadin-tab>
 					</vaadin-tabs>
 					<vaadin-list-box>
@@ -181,19 +180,19 @@ class ChatWindowFooter extends HTMLElement {
 		const chatBody = querySelectorShadowDom.querySelectorDeep(`chat-window-body`)
 		chatBody.reply(`${json[`answer`][`answer`]}이다냥~`)
 		chatBody.reply(`
-		<blockquote class='block-1 active' data-text='${text}' data-subject='${json[`answer`][`output`][`context_subject-1`]}'>
+		<blockquote class='block-1 active' data-text='${text}' data-id='${json[`answer`][`output`][`context_id-1`]}'>
 			${json[`answer`][`output`][`context-1`].split(json[`answer`][`answer`]).join(`<string style='color: blue'>${json[`answer`][`answer`]}</string>`)}
 		</blockquote>		
 		`)
 		chatBody.reply(`
-		<blockquote class='block-2' data-text='${text}' data-subject='${json[`answer`][`output`][`context_subject-2`]}'>
+		<blockquote class='block-2' data-text='${text}' data-id='${json[`answer`][`output`][`context_id-2`]}'>
 			${json[`answer`][`output`][`context-2`].split(json[`answer`][`answer`]).join(`<string style='color: blue'>${json[`answer`][`answer`]}</string>`)}
 		</blockquote>
 		`, {
 			backgroundColor: `lightgray`,
 		})
 		chatBody.reply(`
-		<blockquote class='block-3' data-text='${text}' data-subject='${json[`answer`][`output`][`context_subject-3`]}'>
+		<blockquote class='block-3' data-text='${text}' data-id='${json[`answer`][`output`][`context_id-3`]}'>
 			${json[`answer`][`output`][`context-3`].split(json[`answer`][`answer`]).join(`<string style='color: blue'>${json[`answer`][`answer`]}</string>`)}
 		</blockquote>
 		`, {

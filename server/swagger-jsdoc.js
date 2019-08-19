@@ -49,7 +49,7 @@ module.exports = {
 				},
 			},
 		},
-		schemes: [`http`, `https`], // 가능한 통신 방식
+		schemes: [`https`], // 가능한 통신 방식
 		definitions: {
 			'hanyangfoods': {
 				type: `object`,
